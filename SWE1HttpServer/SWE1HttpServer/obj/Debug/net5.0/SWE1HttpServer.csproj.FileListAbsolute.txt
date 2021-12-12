@@ -1,0 +1,16 @@
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\SWE1HttpServer.exe
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\SWE1HttpServer.deps.json
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\SWE1HttpServer.runtimeconfig.json
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\SWE1HttpServer.runtimeconfig.dev.json
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\SWE1HttpServer.dll
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\ref\SWE1HttpServer.dll
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\bin\Debug\net5.0\SWE1HttpServer.pdb
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.csproj.AssemblyReference.cache
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.AssemblyInfoInputs.cache
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.AssemblyInfo.cs
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.csproj.CoreCompileInputs.cache
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.dll
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\ref\SWE1HttpServer.dll
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.pdb
+c:\Users\Sebastian\Desktop\MTCG\swe1-rest-http\SWE1HttpServer\SWE1HttpServer\obj\Debug\net5.0\SWE1HttpServer.genruntimeconfig.cache

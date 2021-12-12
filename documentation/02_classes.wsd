@@ -1,0 +1,135 @@
+@startuml
+
+package Core {
+    class RequestContext {
+        + Method : HttpMethod
+        + ResourcePath : string
+        + HttpVersion : string
+        + Header : Dictionary<string, string>
+        + Payload : string
+    }
+
+    class Response {
+        + StatusCode : StatusCode
+        + Payload : string
+    }
+
+    interface IServer {
+        + Start() : void
+        + Stop() : void
+    }
+
+    interface IClient {
+        + ReceiveRequest() : RequestContext
+        + SendResponse(Response) : void
+    }
+
+    interface IListener {
+        + AcceptClient() : IClient
+        + Start() : void
+        + Stop() : void
+    }
+
+    class HttpServer implements IServer {        
+        + Start() : void
+        + Stop() : void
+        - HandleClient(IClient) : void
+    }
+
+    class HttpClient implements IClient {
+        + ReceiveRequest() : RequestContext
+        + SendResponse(Response) : void
+    }
+
+    class HttpListener implements IListener {
+        + AcceptClient() : IClient
+        + Start() : void
+        + Stop() : void
+    }
+
+    class Router {
+        + AddRoute() : void
+        + Resolve(RequestContext) : IRouteCommand
+    }
+
+    interface IRouteCommand << Command >> {
+        + Execute() : Response
+    }
+
+    interface IProtectedRouteCommand extends IRouteCommand {
+        + Identity : IIdentity
+    }
+
+    interface IRouteCommandExecutor {
+        + ExecuteCommand(IRouteCommand) : Response
+    }
+
+    interface IIdentity {        
+    }
+
+    enum StatusCode {
+        Ok = 200
+        Created = 201
+        Accepted = 202
+        NoContent = 204
+        BadRequest = 400
+        Unauthorized = 401
+        Forbidden = 403
+        NotFound = 404
+        Conflict = 409
+        InternalServerError = 500
+        NotImplemented = 501
+    }
+
+    enum HttpMethod {
+        Get
+        Post
+        Put
+        Delete
+        Patch
+    }
+}
+
+package App {
+    class Message {
+        + Id : string
+        + Content : string
+    }
+
+    class User {
+        + Username : string
+        + Password : string
+        + Token : string
+    }
+
+    class Credentials {
+        + Username : string
+        + Password : string
+    }
+
+    class MessageManager {
+        + LoginUser(Credentials) : User
+        + RegisterUser(Credentials) : void
+        + AddMessage(User, string) : Message
+        + ListMessages(User) : IEnumerable<Message>
+        + RemoveMessage(User, int) : void
+        + ShowMessage(User, int) : Message
+        + UpdateMessage(User, int, string) : void
+    }
+
+    interface IMessageRepository {
+        + GetMessages(string) : IEnumerable<Message> 
+        + GetMessageById(string, int) : Message
+        + InsertMessage(string, Message) : void
+        + UpdateMessage(string, Message) : void
+        + DeleteMessage(string, int) : void
+    }
+
+    interface IUserRespository {
+        + GetUserByAuthToken(string authToken) : User
+        + GetUserByCredentials(string username, string password) : User
+        + InsertUser(User user) : bool
+    }
+}
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+
+actor "User" as user
+
+rectangle "Http Server" {
+    usecase "Register" as UC1
+    usecase "Login" as UC2
+    usecase "List Messages" as UC3
+    usecase "Add Message" as UC4
+    usecase "Show Message" as UC5
+    usecase "Remove Message" as UC6
+}
+
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC4
+user --> UC5
+user --> UC6
+
+@enduml
