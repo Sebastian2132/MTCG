@@ -1,6 +1,6 @@
 using NUnit.Framework;
-using SWE1HttpServer.DAL;
-using SWE1HttpServer.Models;
+using SWE1HttpServer.app.DAL;
+using SWE1HttpServer.app.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,6 +114,23 @@ namespace SWE1HttpServer.Test
             // assert
             Assert.AreEqual(1,deckTwo.Count);
         }  
+          [Test]
+        public void PlayGameWithNewDeckFromPackageGenerator(){
+            var GameLogic= new GameLogic();
+            var deckOne = PackageGenerator.generatePackage();
+            var deckTwo = PackageGenerator.generatePackage();
+
+            var sizeA = deckOne.Count();
+            var sizeB = deckTwo.Count();
+
+            GameLogic.playTheGame(deckOne, deckTwo);
+
+            Assert.AreNotEqual(sizeA,deckOne.Count());
+            Assert.AreNotEqual(sizeB,deckTwo.Count());
+
+
+
+        }
         [Test]
         public void DoWHoleFightDeckAWin()
         {
@@ -148,6 +165,6 @@ namespace SWE1HttpServer.Test
             Assert.AreEqual(10,deckOne.Count);
         }
        
-        
+      
     }
 }

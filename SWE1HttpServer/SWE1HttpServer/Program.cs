@@ -1,6 +1,6 @@
 ﻿using System;
-using SWE1HttpServer.DAL;
-using SWE1HttpServer.Models;
+using SWE1HttpServer.app.DAL;
+using SWE1HttpServer.app.Models;
 
 namespace SWE1HttpServer
 {

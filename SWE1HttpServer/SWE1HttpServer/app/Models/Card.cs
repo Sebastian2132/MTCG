@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1HttpServer.Models
+namespace SWE1HttpServer.app.Models
 {
      public enum ElementType
     {
@@ -36,6 +36,7 @@ namespace SWE1HttpServer.Models
         public ElementType element;
         public CardType type;
         public abstract string getName();
+        public abstract string getCardNameWithoutElement();
 
 
     }

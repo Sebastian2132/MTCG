@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SWE1HttpServer.Models;
+using SWE1HttpServer.app.Models;
 
 
 
 
-
-namespace SWE1HttpServer.Models
+namespace SWE1HttpServer.app.Models
 {
     public class Spell : Card
     {
@@ -24,6 +23,11 @@ namespace SWE1HttpServer.Models
             public override string getName(){
             string name = "";
             name+=element.ToString()+type.ToString();
+            return name;
+        }
+        public override string getCardNameWithoutElement(){
+            string name = "";
+            name+=type.ToString();
             return name;
         }
     }

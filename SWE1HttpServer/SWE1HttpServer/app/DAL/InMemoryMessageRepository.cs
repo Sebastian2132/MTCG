@@ -1,15 +1,15 @@
-﻿using SWE1HttpServer.Models;
+﻿using SWE1HttpServer.app.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1HttpServer.DAL
+namespace SWE1HttpServer.app.DAL
 {
     public class InMemoryMessageRepository : IMessageRepository
     {
-        private readonly Dictionary<string, List<Message>> userMessages = new();
+         private readonly Dictionary<string, List<Message>> userMessages = new();
         private int nextMessageId = 1;
 
         public void DeleteMessage(string username, int messageId)
@@ -63,3 +63,4 @@ namespace SWE1HttpServer.DAL
         }
     }
 }
+

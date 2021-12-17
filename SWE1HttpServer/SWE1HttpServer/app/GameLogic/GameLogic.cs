@@ -1,12 +1,12 @@
-using SWE1HttpServer.DAL;
-using SWE1HttpServer.Models;
+using SWE1HttpServer.app.DAL;
+using SWE1HttpServer.app.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1HttpServer
+namespace SWE1HttpServer.app.Models
 {
 
     public class GameLogic
@@ -21,13 +21,17 @@ namespace SWE1HttpServer
         {
             int rounds = 0;
             int index=0;
-            string winDetermination="";
+            int index2=0;
             (int, int) damageValues;
             Card card, card2;
+            Random random = new Random();
+            Logger log = new Logger();
             while (rounds < 101 && deckOne.Any() && deckTwo.Any())
             {
+                index = random.Next(deckOne.Count()-1);
+                index2 = random.Next(deckTwo.Count()-1);
                 card = deckOne[index];
-                card2 = deckTwo[index];
+                card2 = deckTwo[index2];
                 if (card.type == CardType.Monster && card2.type == CardType.Monster)
                 {
                     damageValues = checkMonsterRules((Monster)card, (Monster)card2);
@@ -46,9 +50,8 @@ namespace SWE1HttpServer
                     deckTwo.Add(card);
                     deckTwo.Add(card2);
                     deckOne.RemoveAt(index);
-                    deckTwo.RemoveAt(index);
-                    winDetermination="a";
-
+                    deckTwo.RemoveAt(index2);
+                    log.GameLog(card,card2,damageValues.Item1,damageValues.Item2);
 
 
                 }
@@ -57,24 +60,27 @@ namespace SWE1HttpServer
                     deckOne.Add(card);
                     deckOne.Add(card2);
                     deckOne.RemoveAt(index);
-                    deckTwo.RemoveAt(index);
-                    winDetermination="b";
+                    deckTwo.RemoveAt(index2);
+                    
 
+                    log.GameLog(card,card2,damageValues.Item1,damageValues.Item2);
+                }else{
+                    log.GameLog(card,card2,damageValues.Item1,damageValues.Item2);
                 }
-                switch(winDetermination){ 
-                    case "a":
-                    Console.WriteLine("DeckA won!\n Battle:"+card.getName()+" Damage: "+card.Damage+" against "+card2.getName()+" Damage: "+card2.Damage+"\n");break;
-                    case "b":
-                    Console.WriteLine("DeckB won!\n Battle:"+card.getName()+" Damage: "+card.Damage+" against "+card2.getName()+" Damage: "+card2.Damage+"\n");break;
-                    default:
-                    Console.WriteLine("It was a Draw!\n Battle:"+card.getName()+" Damage: "+card.Damage+" against "+card2.getName()+" Damage: "+card2.Damage+"\n");break;
-
-
-
-
-                }
+                
                 rounds++;
             }
+            if(deckOne.Any() && !deckTwo.Any()){ 
+            Console.WriteLine(log.getGameLog("A"));
+
+            }else if(!deckOne.Any() && deckTwo.Any()){
+            Console.WriteLine(log.getGameLog("B"));
+
+            }else{
+            Console.WriteLine(log.getGameLog("D"));
+
+            }
+            //log.clearLog();
 
 
         }

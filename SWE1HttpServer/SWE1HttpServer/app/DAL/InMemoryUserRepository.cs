@@ -1,15 +1,15 @@
-﻿using SWE1HttpServer.Models;
+﻿using SWE1HttpServer.app.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1HttpServer.DAL
+namespace SWE1HttpServer.app.DAL
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private readonly List<User> users = new();
+         private readonly List<User> users = new();
 
         public User GetUserByAuthToken(string authToken)
         {
