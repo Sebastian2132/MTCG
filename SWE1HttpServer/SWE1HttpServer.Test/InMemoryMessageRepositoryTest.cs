@@ -17,11 +17,11 @@ namespace SWE1HttpServer.Test
         {
             // arrange
             var repo = new InMemoryMessageRepository();
-            var user = new User();
             var message = new Message() { Content = "test", Id = 0 };
+            const string username = "testusr";
 
             // act
-            repo.InsertMessage(user.Username, message);
+            repo.InsertMessage(username, message);
 
             // assert
             Assert.Greater(message.Id, 0);
@@ -33,11 +33,12 @@ namespace SWE1HttpServer.Test
             // arrange
             var repo = new InMemoryMessageRepository();
             var message = new Message() { Content = "test", Id = 0 };
-            var user = new User();
-            repo.InsertMessage(user.Username,message);
+            const string username = "testusr";
+
+            repo.InsertMessage(username, message);
 
             // act
-            var storedMessage = repo.GetMessageById(user.Username,message.Id);
+            var storedMessage = repo.GetMessageById(username, message.Id);
 
             // assert
             Assert.IsNotNull(storedMessage);
@@ -46,16 +47,17 @@ namespace SWE1HttpServer.Test
         [Test]
         public void TestGetMessageRetrievesNoMessageForInvalidId()
         {
-            var user = new User();
             // arrange
             var repo = new InMemoryMessageRepository();
+            const string username = "testusr";
             var invalidId = 1;
 
             // act
-            var storedMessage = repo.GetMessageById(user.Username,invalidId);
+            var storedMessage = repo.GetMessageById(username, invalidId);
 
             // assert
             Assert.IsNull(storedMessage);
         }
+
     }
 }
