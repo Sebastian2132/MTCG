@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
 using SWE1HttpServer.core.Response;
-using HttpMethod = SWE1HttpServer.core.Response.HttpMethod;
 
 namespace SWE1HttpServer.core.Client
 {

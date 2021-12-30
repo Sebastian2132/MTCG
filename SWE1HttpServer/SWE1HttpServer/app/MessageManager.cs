@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SWE1HttpServer
 {
-    public class MessageManager
+    public class MessageManager:IMessageManager
     {
         private readonly IMessageRepository messageRepository;
         private readonly IUserRepository userRepository;

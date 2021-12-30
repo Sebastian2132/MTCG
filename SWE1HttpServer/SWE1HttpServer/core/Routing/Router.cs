@@ -1,5 +1,4 @@
-using SWE1HttpServer.app.DAL;
-using SWE1HttpServer.app.Models;
+﻿using SWE1HttpServer.core.Authentication;
 using SWE1HttpServer.core.Request;
 using System;
 using System.Collections.Generic;
@@ -9,17 +8,80 @@ using System.Threading.Tasks;
 
 namespace SWE1HttpServer.core.Routing
 {
-
-    public class Router 
+    public class Router : IRouter
     {
-       void AddRoute(){
-           throw new NotImplementedException();
-       }
+        private interface ICreator { }
 
-        public IRouteCommand Resolve(RequestContext context)
+        private class PublicCreator : ICreator
         {
-            throw new NotImplementedException();
+            public CreatePublicRouteCommand Create { get; set; }
+        }
+
+        private class ProtectedCreator : ICreator
+        {
+            public CreateProtectedRouteCommand Create { get; set; }
+        }
+
+        private readonly Dictionary<Tuple<HttpMethod, string>, ICreator> routes;
+
+        public delegate IRouteCommand CreatePublicRouteCommand(RequestContext request, Dictionary<string, string> parameters);
+        public delegate IProtectedRouteCommand CreateProtectedRouteCommand(RequestContext request, Dictionary<string, string> parameters);
+
+        private readonly IRouteParser routeParser;
+        private readonly IIdentityProvider identityProvider;
+
+        public Router(IRouteParser routeParser, IIdentityProvider identityProvider)
+        {
+            routes = new Dictionary<Tuple<HttpMethod, string>, ICreator>();
+            this.routeParser = routeParser;
+            this.identityProvider = identityProvider;
+        }
+
+        public void AddRoute(HttpMethod method, string routePattern, CreatePublicRouteCommand create)
+        {
+            var key = new Tuple<HttpMethod, string>(method, routePattern);
+            var value = new PublicCreator() { Create = create };
+            routes.Add(key, value);
+        }
+
+        public void AddProtectedRoute(HttpMethod method, string routePattern, CreateProtectedRouteCommand create)
+        {
+            var key = new Tuple<HttpMethod, string>(method, routePattern);
+            var value = new ProtectedCreator() { Create = create };
+            routes.Add(key, value);
+        }
+
+        public IRouteCommand Resolve(RequestContext request)
+        {
+            IRouteCommand command = null;
+
+            foreach (var route in routes.Keys)
+            {
+                if (routeParser.isMatch(request, route.Item1, route.Item2))
+                {
+                    var parameters = routeParser.ParseParameters(request, route.Item2);
+                    var creator = routes[route];
+                    command = creator switch
+                    {
+                        PublicCreator c => c.Create(request, parameters),
+                        ProtectedCreator c => Protect(c.Create, request, parameters),
+                        _ => throw new NotImplementedException()
+                    };
+                    break;
+                }
+            }
+
+            return command;
+        }
+
+        private IProtectedRouteCommand Protect(CreateProtectedRouteCommand create, RequestContext request, Dictionary<string, string> parameters)
+        {
+            var identity = identityProvider.getIdentityforRequest(request);
+
+            var command = create(request, parameters);
+            command.Identity = identity ?? throw new RouteNotAuthorizedException();
+
+            return command;
         }
     }
-
 }

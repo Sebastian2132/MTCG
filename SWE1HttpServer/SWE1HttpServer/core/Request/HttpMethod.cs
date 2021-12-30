@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1HttpServer.core.Response
+namespace SWE1HttpServer.core.Request
 {
 
     public enum HttpMethod
