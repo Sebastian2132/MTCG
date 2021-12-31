@@ -30,5 +30,8 @@ namespace SWE1HttpServer.app.Models
             name+=type.ToString();
             return name;
         }
+        public override string toString(){ 
+            return "Name: "+ this.getName()+", Damage: "+ this.Damage+"\n";
+        }
     }
 }

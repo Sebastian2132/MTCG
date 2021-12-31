@@ -34,9 +34,21 @@ namespace SWE1HttpServer.app.DAL
             return inserted;
         }
 
+       
+
+        public void UpdateDeck(User user, IEnumerable<Card> package)
+        {
+           user.AllCards.AddRange(package);
+        }
+
         private User GetUserByName(string username)
         {
             return users.SingleOrDefault(u => u.Username == username);
+        }
+
+        IEnumerable<Card> IUserRepository.ShowWholeDeck(User user)
+        {
+            return user.AllCards;
         }
     }
 }

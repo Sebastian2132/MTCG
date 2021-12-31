@@ -8,6 +8,8 @@ using SWE1HttpServer.app.DAL;
 using SWE1HttpServer.app.Models;
 using SWE1HttpServer.RouteCommands.Messages;
 using SWE1HttpServer.RouteCommands.Users;
+using SWE1HttpServer.RouteCommands.Cards;
+
 
 namespace SWE1HttpServer.SWE1HttpServer
 {
@@ -42,6 +44,9 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Put, "/messages/{id}", (r, p) => new UpdateMessageCommand(messageManager, int.Parse(p["id"]), r.Payload));
             router.AddProtectedRoute(HttpMethod.Delete, "/messages/{id}", (r, p) => new RemoveMessageCommand(messageManager, int.Parse(p["id"])));
             router.AddProtectedRoute(HttpMethod.Post,"/transactions/packages", (r, p)=>new BuyPackages(messageManager));
+            router.AddProtectedRoute(HttpMethod.Get,"/cards", (r, p)=>new ShowWholeDeck(messageManager));
+            router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddCardCommand(messageManager));
+
         }
 
         private static T Deserialize<T>(string payload) where T : class

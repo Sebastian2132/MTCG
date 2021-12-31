@@ -32,7 +32,9 @@ namespace SWE1HttpServer
                 Username = credentials.Username,
                 Password = credentials.Password,
                 Coins = 20,
-                Score = 100
+                Score = 100,
+                AllCards = new List<Card>()
+
             };
             if (userRepository.InsertUser(user) == false)
             {
@@ -88,8 +90,18 @@ namespace SWE1HttpServer
         }
         public IEnumerable<Card> AquirePackages(User user)
         {
+            List<Card> package = new List<Card>();
+            if(user.Coins >=5){
+                package=PackageGenerator.generatePackage();
+                userRepository.UpdateDeck(user,package);
+                user.Coins -= 5;
+            }
+            return package;
+        }
+        
+        public IEnumerable<Card> ShowWholeDeck(User user){
+            return userRepository.ShowWholeDeck(user);
 
-            throw new NotImplementedException();
         }
     }
 }

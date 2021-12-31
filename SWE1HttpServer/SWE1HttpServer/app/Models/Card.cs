@@ -38,6 +38,8 @@ namespace SWE1HttpServer.app.Models
         public abstract string getName();
         public abstract string getCardNameWithoutElement();
 
+        public abstract string toString();
+
 
     }
 }
