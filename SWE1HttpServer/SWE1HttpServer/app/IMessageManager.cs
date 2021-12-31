@@ -9,8 +9,10 @@ namespace SWE1HttpServer
         IEnumerable<Message> ListMessages(User user);
         User LoginUser(Credentials credentials);
         void RegisterUser(Credentials credentials);
+        IEnumerable<Card> AquirePackages(User user);
         void RemoveMessage(User user, int messageId);
         Message ShowMessage(User user, int messageId);
         void UpdateMessage(User user, int messageId, string content);
+
     }
 }

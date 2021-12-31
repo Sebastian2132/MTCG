@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SWE1HttpServer
 {
-    public class MessageManager:IMessageManager
+    public class MessageManager : IMessageManager
     {
         private readonly IMessageRepository messageRepository;
         private readonly IUserRepository userRepository;
@@ -30,7 +30,9 @@ namespace SWE1HttpServer
             var user = new User()
             {
                 Username = credentials.Username,
-                Password = credentials.Password
+                Password = credentials.Password,
+                Coins = 20,
+                Score = 100
             };
             if (userRepository.InsertUser(user) == false)
             {
@@ -83,6 +85,11 @@ namespace SWE1HttpServer
             {
                 throw new MessageNotFoundException();
             }
+        }
+        public IEnumerable<Card> AquirePackages(User user)
+        {
+
+            throw new NotImplementedException();
         }
     }
 }
