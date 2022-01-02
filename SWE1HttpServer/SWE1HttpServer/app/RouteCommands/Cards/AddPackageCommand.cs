@@ -10,33 +10,32 @@ using SWE1HttpServer.app.Models;
 
 namespace SWE1HttpServer.RouteCommands.Cards
 {
-    class AddCardCommand : ProtectedRouteCommand
+    class AddPackagesCommand : ProtectedRouteCommand
     {
         private readonly IMessageManager messageManager;
-        public AddCardCommand(IMessageManager messageManager)
+        string package;
+        public AddPackagesCommand(IMessageManager messageManager, string package)
         {
             this.messageManager = messageManager;
+            this.package = package;
         }
 
         public override Response Execute()
         {
             var response = new Response();
-            var package = messageManager.AquirePackages(User);
-            
-            if (package.Any())
-            {
-                response.Payload += "Package:\n";
-                foreach (var card in package)
-                {
-                    response.Payload +=card.toString() + "\n";
-                }
+            List<TestCard> tempPackage = JsonConvert.DeserializeObject<List<TestCard>>(package);
+            List<Card> realPackage = messageManager.MakePackage(tempPackage);
+            if (realPackage.Count() > 0) { 
+                            messageManager.AddPackage(realPackage);
+                            response.StatusCode = StatusCode.Ok;
 
-                response.StatusCode = StatusCode.Ok;
             }
             else
             {
                 response.StatusCode = StatusCode.Conflict;
             }
+            
+
 
             return response;
 

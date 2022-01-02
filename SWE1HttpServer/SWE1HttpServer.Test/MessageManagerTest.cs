@@ -20,7 +20,8 @@ namespace SWE1HttpServer.Test
             var userRepository = new InMemoryUserRepository();
             var user = new User();
             var messageRepo = new Mock<IMessageRepository>();
-            var messageManager = new MessageManager(messageRepo.Object,userRepository);
+            var packageRepo = new InMemoryPackageRepository();
+            var messageManager = new MessageManager(messageRepo.Object,userRepository,packageRepo);
             var content = "testcontent";
 
             // act
@@ -36,8 +37,9 @@ namespace SWE1HttpServer.Test
             // arrange
             var messageRepo = new Mock<IMessageRepository>();
              var userRepository = new InMemoryUserRepository();
+             var packageRepo = new InMemoryPackageRepository();
             var user = new User();
-            var messageManager = new MessageManager(messageRepo.Object,userRepository);
+            var messageManager = new MessageManager(messageRepo.Object,userRepository,packageRepo);
             var invalidId = 1;
             messageRepo.Setup(m => m.GetMessageById(user.Username,invalidId)).Returns((Message)null);
 
@@ -51,8 +53,9 @@ namespace SWE1HttpServer.Test
             // arrange
               var userRepository = new InMemoryUserRepository();
             var user = new User();
+            var packageRepo = new InMemoryPackageRepository();
             var messageRepo = new Mock<IMessageRepository>();
-            var messageManager = new MessageManager(messageRepo.Object,userRepository);
+            var messageManager = new MessageManager(messageRepo.Object,userRepository,packageRepo);
             var expectedMessage = new Message() { Content = "test", Id = 1 };
             messageRepo.Setup(m => m.GetMessageById(user.Username,expectedMessage.Id)).Returns(expectedMessage);
 

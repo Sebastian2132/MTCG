@@ -9,8 +9,8 @@ namespace SWE1HttpServer.app.DAL
 {
     public interface IPackageRepository
     {
-        void addPackageToDb(string package);
-        IEnumerable<Card> getPackageFromDb();
+        void addPackageToDb(List<Card> package);
+        List<Card> getPackageFromDb();
 
     }
 }

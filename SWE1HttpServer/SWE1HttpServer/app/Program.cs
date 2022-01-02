@@ -9,7 +9,7 @@ using SWE1HttpServer.app.Models;
 using SWE1HttpServer.RouteCommands.Messages;
 using SWE1HttpServer.RouteCommands.Users;
 using SWE1HttpServer.RouteCommands.Cards;
-
+using System.Collections.Generic;
 
 namespace SWE1HttpServer.SWE1HttpServer
 {
@@ -19,7 +19,9 @@ namespace SWE1HttpServer.SWE1HttpServer
         {
             var messageRepository = new InMemoryMessageRepository();
             var userRepository = new InMemoryUserRepository();
-            var messageManager = new MessageManager(messageRepository, userRepository);
+            var packageRepository = new InMemoryPackageRepository();
+
+            var messageManager = new MessageManager(messageRepository, userRepository,packageRepository);
 
             var identityProvider = new MessageIdentityProvider(userRepository);
             var routeParser = new IdRouteParser();
@@ -45,7 +47,7 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Delete, "/messages/{id}", (r, p) => new RemoveMessageCommand(messageManager, int.Parse(p["id"])));
             router.AddProtectedRoute(HttpMethod.Post,"/transactions/packages", (r, p)=>new BuyPackages(messageManager));
             router.AddProtectedRoute(HttpMethod.Get,"/cards", (r, p)=>new ShowWholeDeck(messageManager));
-            router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddCardCommand(messageManager));
+            router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,r.Payload));
 
         }
 

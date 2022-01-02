@@ -10,15 +10,22 @@ namespace SWE1HttpServer.app.DAL
     public class InMemoryPackageRepository : IPackageRepository
     {
         List<List<Card>> packages = new();
-        public void addPackageToDb(string package)
+        public void addPackageToDb(List<Card> package)
         {
             
-            throw new NotImplementedException();
+            packages.Add(package);
         }
 
-        public IEnumerable<Card> getPackageFromDb()
+        public List<Card> getPackageFromDb()
         {
-            throw new NotImplementedException();
+            if(packages.Count > 0){
+            List<Card> package = packages[0];
+            packages.RemoveAt(0);
+            return package;
+            }else{
+                return null;
+            }
+           
         }
     }
 }

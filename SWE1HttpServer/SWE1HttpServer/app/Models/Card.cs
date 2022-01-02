@@ -35,6 +35,7 @@ namespace SWE1HttpServer.app.Models
         public int Damage ;
         public ElementType element;
         public CardType type;
+        public string Name;
         public abstract string getName();
         public abstract string getCardNameWithoutElement();
 

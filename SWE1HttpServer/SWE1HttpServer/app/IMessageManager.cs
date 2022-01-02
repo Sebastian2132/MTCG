@@ -14,6 +14,7 @@ namespace SWE1HttpServer
         void RemoveMessage(User user, int messageId);
         Message ShowMessage(User user, int messageId);
         void UpdateMessage(User user, int messageId, string content);
-
+        void AddPackage(List<Card> package);
+        List<Card> MakePackage(List<TestCard> package);
     }
 }
