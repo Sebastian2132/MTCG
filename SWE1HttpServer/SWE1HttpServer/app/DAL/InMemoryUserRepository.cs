@@ -34,7 +34,10 @@ namespace SWE1HttpServer.app.DAL
             return inserted;
         }
 
-       
+        IEnumerable<Card> IUserRepository.ShowActiveDeck(User user)
+        {
+            return user.MainDeck;
+        }
 
         public void UpdateDeck(User user, IEnumerable<Card> package)
         {

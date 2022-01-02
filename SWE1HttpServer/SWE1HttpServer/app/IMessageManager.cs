@@ -11,6 +11,7 @@ namespace SWE1HttpServer
         void RegisterUser(Credentials credentials);
         IEnumerable<Card> AquirePackages(User user);
         IEnumerable<Card> ShowWholeDeck(User user);
+        IEnumerable<Card> ShowActiveDeck(User user);
         void RemoveMessage(User user, int messageId);
         Message ShowMessage(User user, int messageId);
         void UpdateMessage(User user, int messageId, string content);

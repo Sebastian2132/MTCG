@@ -37,7 +37,8 @@ namespace SWE1HttpServer
                 Password = credentials.Password,
                 Coins = 20,
                 Score = 100,
-                AllCards = new List<Card>()
+                AllCards = new List<Card>(),
+                MainDeck = new List<Card>()
 
             };
             if (userRepository.InsertUser(user) == false)
@@ -149,6 +150,7 @@ namespace SWE1HttpServer
             }
             return finalPackage;
         }
+    
 
         private MonsterType getMonsterType(string type)
         {
@@ -174,6 +176,11 @@ namespace SWE1HttpServer
                 case "Fire": return ElementType.Fire;
                 default: return ElementType.Normal;
             }
+        }
+
+        public IEnumerable<Card> ShowActiveDeck(User user)
+        {
+            return userRepository.ShowActiveDeck(user);
         }
     }
 }
