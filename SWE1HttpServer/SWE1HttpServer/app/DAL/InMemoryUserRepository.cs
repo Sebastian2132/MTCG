@@ -53,5 +53,15 @@ namespace SWE1HttpServer.app.DAL
         {
             return user.AllCards;
         }
+
+        public void UpdateActiveDeck(User user, List<Card> cards)
+        {
+            user.MainDeck.AddRange(cards);
+        }
+
+        public List<Card> allCards(User user)
+        {
+            return user.AllCards;
+        }
     }
 }

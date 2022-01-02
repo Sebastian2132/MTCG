@@ -1,4 +1,5 @@
-﻿using SWE1HttpServer.app.DAL;
+﻿using Newtonsoft.Json;
+using SWE1HttpServer.app.DAL;
 using SWE1HttpServer.app.Models;
 using System;
 using System.Collections.Generic;
@@ -129,20 +130,22 @@ namespace SWE1HttpServer
                     type = fullInfo[1];
                     if (type == "Spell")
                     {
-                        Spell card = new Spell(getElement(element), p.Damage);
+                        Spell card = new Spell(getElement(element), p.Damage, p.Id);
                         finalPackage.Add(card);
 
                     }
                     else
                     {
-                        Monster card = new Monster(getElement(element), getMonsterType(type), p.Damage);
+                        Monster card = new Monster(getElement(element), getMonsterType(type), p.Damage, p.Id);
                         finalPackage.Add(card);
 
 
                     }
-                }else{
+                }
+                else
+                {
                     type = fullInfo[0];
-                    Monster card = new Monster(ElementType.Normal, getMonsterType(type), p.Damage);
+                    Monster card = new Monster(ElementType.Normal, getMonsterType(type), p.Damage, p.Id);
                     finalPackage.Add(card);
                 }
 
@@ -150,7 +153,7 @@ namespace SWE1HttpServer
             }
             return finalPackage;
         }
-    
+
 
         private MonsterType getMonsterType(string type)
         {
@@ -182,5 +185,32 @@ namespace SWE1HttpServer
         {
             return userRepository.ShowActiveDeck(user);
         }
+
+        public bool setDeck(string cards, User user)
+        {
+            List<Card> newActiveDeck = new List<Card>();
+            Card card;
+            List<Card> allCards = userRepository.allCards(user);
+            string[] fullInfo = JsonConvert.DeserializeObject<string[]>(cards);
+            if (fullInfo.Length <= 3)
+            {
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < fullInfo.Length; i++)
+                {
+                    card = allCards.Find(x => x.Id == fullInfo[i]);
+                    newActiveDeck.Add(card);
+                }
+                userRepository.UpdateActiveDeck(user, newActiveDeck);
+                return true;
+            }
+
+
+
+        }
+
+
     }
 }

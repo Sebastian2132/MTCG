@@ -49,7 +49,7 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Get,"/cards", (r, p)=>new ShowWholeDeck(messageManager));
             router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,r.Payload));
             router.AddProtectedRoute(HttpMethod.Get,"/deck", (r, p)=>new ShowDeckCommand(messageManager));
-            //router.AddProtectedRoute(HttpMethod.Put,"/deck", (r, p)=>new UpdateDeck(messageManager,r.Payload));
+            router.AddProtectedRoute(HttpMethod.Put,"/deck", (r, p)=>new UpdateDeckCommand(messageManager,r.Payload));
 
         }
 

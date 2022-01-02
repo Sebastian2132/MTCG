@@ -12,11 +12,12 @@ namespace SWE1HttpServer.app.Models
 {
     public class Spell : Card
     {
-        public Spell(ElementType element, int damage)
+        public Spell(ElementType element, int damage,string Id)
         {
             this.element = element;
             this.Damage = damage;
             this.type = CardType.Spell;
+            this.Id=Id;
 
         }
 

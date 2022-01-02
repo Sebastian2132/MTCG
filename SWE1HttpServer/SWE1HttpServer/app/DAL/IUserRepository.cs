@@ -15,7 +15,10 @@ namespace SWE1HttpServer.app.DAL
 
         bool InsertUser(User user);
         void UpdateDeck(User user,IEnumerable<Card> package);
+        void UpdateActiveDeck(User user,List<Card> cards);
         IEnumerable<Card> ShowWholeDeck(User user);
         IEnumerable<Card> ShowActiveDeck(User user);
+
+        List<Card> allCards(User user);
     }
 }

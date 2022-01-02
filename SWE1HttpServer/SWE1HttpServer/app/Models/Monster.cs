@@ -14,12 +14,13 @@ namespace SWE1HttpServer.app.Models
     public class Monster : Card
     {
         public MonsterType monsterType{ get; set;}
-        public Monster(ElementType element, MonsterType MonsterType, int damage)
+        public Monster(ElementType element, MonsterType MonsterType, int damage,string Id)
         {
             this.element = element;
             this.monsterType = MonsterType;
             this.Damage = damage;
             this.type = CardType.Monster;
+            this.Id=Id;
 
         }
         public override string getName(){
