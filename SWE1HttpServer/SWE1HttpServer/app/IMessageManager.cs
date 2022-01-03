@@ -18,5 +18,8 @@ namespace SWE1HttpServer
         void AddPackage(List<Card> package);
         bool setDeck(string cards,User user);
         List<Card> MakePackage(List<TestCard> package);
+        string GetUserInfo(User user,string userName);
+
+        bool SetUserInfo(User user,string userName,Dictionary<string, string> info);
     }
 }

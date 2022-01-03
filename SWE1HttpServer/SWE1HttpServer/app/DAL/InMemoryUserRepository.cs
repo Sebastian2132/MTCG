@@ -63,5 +63,18 @@ namespace SWE1HttpServer.app.DAL
         {
             return user.AllCards;
         }
+
+        public string GetUserInfo(User user)
+        {
+            string userInfo = "UserInfo:\n"+user.Username + "\n"+user.Bio+"\n"+user.Picture;
+            return userInfo;
+        }
+
+        public void SetUserInfo(User user,string userName, string Bio, string picture)
+        {
+            user.Name = userName;
+            user.Bio = Bio;
+            user.Picture = picture;
+        }
     }
 }

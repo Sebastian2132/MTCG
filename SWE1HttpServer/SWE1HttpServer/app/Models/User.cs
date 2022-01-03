@@ -16,6 +16,9 @@ namespace SWE1HttpServer.app.Models
 
             public int Coins{ get; set;}
             public int Score { get;set;}
+            public string Name { get; set; }
+            public string Bio { get; set; }
+            public string Picture { get; set; }
             public List<Card> MainDeck{get; set;}
             public List<Card> AllCards{get; set;}
 

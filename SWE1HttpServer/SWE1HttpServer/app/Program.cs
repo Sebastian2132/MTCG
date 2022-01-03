@@ -50,6 +50,9 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,r.Payload));
             router.AddProtectedRoute(HttpMethod.Get,"/deck", (r, p)=>new ShowDeckCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Put,"/deck", (r, p)=>new UpdateDeckCommand(messageManager,r.Payload));
+            router.AddProtectedRoute(HttpMethod.Get,"/users/{id}", (r, p)=>new GetUSerDataCommand(messageManager,p["id"]));
+            router.AddProtectedRoute(HttpMethod.Put,"/users/{id}", (r, p)=>new SetUserDataCommand(messageManager,p["id"],Deserialize<Dictionary<string,string>>(r.Payload)));
+            //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new SetUserDataCommand(messageManager);
 
         }
 

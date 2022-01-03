@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SWE1HttpServer.app.DAL;
 using SWE1HttpServer.app.Models;
+using SWE1HttpServer.core.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -201,6 +202,9 @@ namespace SWE1HttpServer
                 for (int i = 0; i < fullInfo.Length; i++)
                 {
                     card = allCards.Find(x => x.Id == fullInfo[i]);
+                    if(card==null){
+                        return false;
+                    }
                     newActiveDeck.Add(card);
                 }
                 userRepository.UpdateActiveDeck(user, newActiveDeck);
@@ -211,6 +215,26 @@ namespace SWE1HttpServer
 
         }
 
+        public string GetUserInfo(User user, string userName)
+        {
+            if(user.Username != userName){
+                throw new RouteNotAuthorizedException();
 
+            }else{
+                return userRepository.GetUserInfo(user);
+            }
+        }
+
+        public bool SetUserInfo(User user, string userName, Dictionary<string, string> info)
+        {
+                 if(user.Username != userName){
+                     return false;
+            }else{
+                userRepository.SetUserInfo(user,info["Name"], info["Bio"],info["Image"]);
+                return true;
+            }
+                
+            
+        }
     }
 }

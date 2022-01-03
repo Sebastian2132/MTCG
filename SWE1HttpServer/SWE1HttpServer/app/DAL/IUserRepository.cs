@@ -18,6 +18,8 @@ namespace SWE1HttpServer.app.DAL
         void UpdateActiveDeck(User user,List<Card> cards);
         IEnumerable<Card> ShowWholeDeck(User user);
         IEnumerable<Card> ShowActiveDeck(User user);
+        string GetUserInfo(User user);
+        void SetUserInfo(User user,string userName,string Bio,string picture);
 
         List<Card> allCards(User user);
     }
