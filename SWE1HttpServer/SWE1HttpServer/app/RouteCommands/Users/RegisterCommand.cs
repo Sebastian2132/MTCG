@@ -11,10 +11,10 @@ namespace SWE1HttpServer.RouteCommands.Users
 {
     class RegisterCommand : IRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IRequestManager messageManager;
         public Credentials Credentials { get; private set; }
 
-        public RegisterCommand(IMessageManager messageManager, Credentials credentials)
+        public RegisterCommand(IRequestManager messageManager, Credentials credentials)
         {
             Credentials = credentials;
             this.messageManager = messageManager;

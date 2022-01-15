@@ -12,8 +12,8 @@ namespace SWE1HttpServer.RouteCommands.Cards
 {
     class BuyPackages : ProtectedRouteCommand
     {
-        private readonly IMessageManager messageManager;
-        public BuyPackages(IMessageManager messageManager)
+        private readonly IRequestManager messageManager;
+        public BuyPackages(IRequestManager messageManager)
         {
             this.messageManager = messageManager;
         }

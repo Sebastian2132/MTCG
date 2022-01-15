@@ -12,9 +12,9 @@ namespace SWE1HttpServer.RouteCommands.Cards
 {
     class ShowWholeDeck : ProtectedRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IRequestManager messageManager;
 
-        public ShowWholeDeck(IMessageManager messageManager)
+        public ShowWholeDeck(IRequestManager messageManager)
         {
             this.messageManager = messageManager;
         }

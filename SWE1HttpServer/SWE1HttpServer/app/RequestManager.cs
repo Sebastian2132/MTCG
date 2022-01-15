@@ -12,15 +12,14 @@ using System.Threading.Tasks;
 
 namespace SWE1HttpServer
 {
-    public class MessageManager : IMessageManager
+    public class RequestManager : IRequestManager
     {
-        private readonly IMessageRepository messageRepository;
+        
         private readonly IUserRepository userRepository;
         private readonly IPackageRepository packageRepository;
 
-        public MessageManager(IMessageRepository messageRepository, IUserRepository userRepository, IPackageRepository packageRepository)
+        public RequestManager(IUserRepository userRepository, IPackageRepository packageRepository)
         {
-            this.messageRepository = messageRepository;
             this.userRepository = userRepository;
             this.packageRepository = packageRepository;
         }
@@ -49,58 +48,13 @@ namespace SWE1HttpServer
             }
         }
 
-        public Message AddMessage(User user, string content)
-        {
-            var message = new Message() { Content = content };
-            messageRepository.InsertMessage(user.Username, message);
-
-            return message;
-        }
-
-        public IEnumerable<Message> ListMessages(User user)
-        {
-            return messageRepository.GetMessages(user.Username);
-        }
-
-        public void RemoveMessage(User user, int messageId)
-        {
-            if (messageRepository.GetMessageById(user.Username, messageId) != null)
-            {
-                messageRepository.DeleteMessage(user.Username, messageId);
-            }
-            else
-            {
-                throw new MessageNotFoundException();
-            }
-        }
-
-        public Message ShowMessage(User user, int messageId)
-        {
-            Message message;
-            return (message = messageRepository.GetMessageById(user.Username, messageId)) != null
-                ? message
-                : throw new MessageNotFoundException();
-        }
-
-        public void UpdateMessage(User user, int messageId, string content)
-        {
-            Message message;
-            if ((message = messageRepository.GetMessageById(user.Username, messageId)) != null)
-            {
-                message.Content = content;
-                messageRepository.UpdateMessage(user.Username, message);
-            }
-            else
-            {
-                throw new MessageNotFoundException();
-            }
-        }
+       
         public IEnumerable<Card> AquirePackages(User user)
         {
             List<Card> package = new List<Card>();
             if (user.Coins >= 5)
             {
-                package = packageRepository.getPackageFromDb();
+                package = packageRepository.GetPackage();
                 userRepository.UpdateDeck(user, package);
                 user.Coins -= 5;
             }
@@ -114,7 +68,7 @@ namespace SWE1HttpServer
         }
         public void AddPackage(List<Card> package)
         {
-            packageRepository.addPackageToDb(package);
+            packageRepository.AddPackage(package);
 
         }
 
@@ -182,7 +136,7 @@ namespace SWE1HttpServer
             }
         }
 
-        public IEnumerable<Card> ShowActiveDeck(User user)
+        public List<Card> ShowActiveDeck(User user)
         {
             return userRepository.ShowActiveDeck(user);
         }

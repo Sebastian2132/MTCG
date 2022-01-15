@@ -11,11 +11,11 @@ namespace SWE1HttpServer.RouteCommands.Users
 {
     class LoginCommand : IRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IRequestManager messageManager;
 
         public Credentials Credentials { get; private set; }
 
-        public LoginCommand(IMessageManager messageManager, Credentials credentials)
+        public LoginCommand(IRequestManager messageManager, Credentials credentials)
         {
             Credentials = credentials;
             this.messageManager = messageManager;

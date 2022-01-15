@@ -11,12 +11,12 @@ namespace SWE1HttpServer.RouteCommands.Users
 {
     class SetUserDataCommand : ProtectedRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IRequestManager messageManager;
 
         public readonly string userName;
         private readonly Dictionary<string, string> info;
 
-        public SetUserDataCommand(IMessageManager messageManager, string  userName,Dictionary<string, string> info)
+        public SetUserDataCommand(IRequestManager messageManager, string  userName,Dictionary<string, string> info)
         {
             this.userName = userName;
             this.messageManager = messageManager;

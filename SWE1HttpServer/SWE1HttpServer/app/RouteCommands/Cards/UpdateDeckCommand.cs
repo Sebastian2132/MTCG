@@ -12,9 +12,9 @@ namespace SWE1HttpServer.RouteCommands.Cards
 {
     class UpdateDeckCommand : ProtectedRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IRequestManager messageManager;
         string cards;
-        public UpdateDeckCommand(IMessageManager messageManager, string cards)
+        public UpdateDeckCommand(IRequestManager messageManager, string cards)
         {
             this.messageManager = messageManager;
             this.cards =cards;

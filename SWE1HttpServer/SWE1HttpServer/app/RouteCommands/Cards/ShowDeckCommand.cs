@@ -12,8 +12,8 @@ namespace SWE1HttpServer.RouteCommands.Cards
 {
     class ShowDeckCommand : ProtectedRouteCommand
     {
-        private readonly IMessageManager messageManager;
-        public ShowDeckCommand(IMessageManager messageManager)
+        private readonly IRequestManager messageManager;
+        public ShowDeckCommand(IRequestManager messageManager)
         {
             this.messageManager = messageManager;
             

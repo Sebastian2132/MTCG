@@ -12,9 +12,9 @@ namespace SWE1HttpServer.RouteCommands.Cards
 {
     class AddPackagesCommand : ProtectedRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IRequestManager messageManager;
         string package;
-        public AddPackagesCommand(IMessageManager messageManager, string package)
+        public AddPackagesCommand(IRequestManager messageManager, string package)
         {
             this.messageManager = messageManager;
             this.package = package;
