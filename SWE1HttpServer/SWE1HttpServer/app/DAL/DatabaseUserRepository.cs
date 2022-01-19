@@ -11,13 +11,17 @@ namespace SWE1HttpServer.app.DAL
 {
     class DatabaseUserRepository : IUserRepository
     {
-        private const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS users"+ 
-        "(username VARCHAR PRIMARY KEY, password VARCHAR, token VARCHAR, coins INT Default 20,"+
+        private const string CreateTableCommand = "CREATE TABLE IF NOT EXISTS users" +
+        "(username VARCHAR PRIMARY KEY, password VARCHAR, auth_token VARCHAR, coins INT DEFAULT 20," +
         "score INT Default 100, name VARCHAR Default ' ',bio VARCHAR Default ' ',picture VARCHAR Default ' ' );";
 
-        private const string InsertUserCommand = "INSERT INTO users(username, password, token) VALUES (@username, @password, @token)";
-        private const string SelectUserByTokenCommand = "SELECT username, password FROM users WHERE token=@token";
-        private const string SelectUserByCredentialsCommand = "SELECT username, password FROM users WHERE username=@username AND password=@password";
+       
+
+        private const string InsertUserCommand = "INSERT INTO users(username, password, auth_token) VALUES (@username, @password, @token)";
+        private const string SelectUserByTokenCommand = "SELECT * FROM users WHERE auth_token=@token";
+        private const string SelectUserByCredentialsCommand = "SELECT * FROM users WHERE username=@username AND password=@password";
+    	private const string InsertNewOwnerCommand ="INSERT INTO owns(id, username)VALUES(@id,@user)";
+        private const string RemoveFromPackageCommand ="DELETE FROM packages WHERE card_id=@id";
 
         private readonly NpgsqlConnection _connection;
 
@@ -72,6 +76,21 @@ namespace SWE1HttpServer.app.DAL
             throw new NotImplementedException();
         }
 
+        public void UpdateDeck(User user, List<Card> package)
+        {
+            for(int i = 0; i < package.Count; i++){
+                var cmd = new NpgsqlCommand(InsertNewOwnerCommand, _connection);
+                cmd.Parameters.AddWithValue("id",package[i].Id);
+                cmd.Parameters.AddWithValue("user",user.Username);
+                cmd.ExecuteNonQuery();
+                var cmd2 = new NpgsqlCommand(RemoveFromPackageCommand,_connection);
+                cmd2.Parameters.AddWithValue("id",package[i].Id);
+                cmd2.ExecuteNonQuery();
+
+
+            }
+            
+        }
         public bool InsertUser(User user)
         {
             var affectedRows = 0;
@@ -81,9 +100,9 @@ namespace SWE1HttpServer.app.DAL
                 cmd.Parameters.AddWithValue("username", user.Username);
                 cmd.Parameters.AddWithValue("password", user.Password);
                 cmd.Parameters.AddWithValue("token", user.Token);
-                
 
-             
+
+
                 affectedRows = cmd.ExecuteNonQuery();
             }
             catch (PostgresException)
@@ -104,7 +123,7 @@ namespace SWE1HttpServer.app.DAL
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Card> ShowWholeDeck(User user)
+        public List<Card> ShowWholeDeck(User user)
         {
             throw new NotImplementedException();
         }
@@ -114,15 +133,13 @@ namespace SWE1HttpServer.app.DAL
             throw new NotImplementedException();
         }
 
-        public void UpdateDeck(User user, IEnumerable<Card> package)
-        {
-            throw new NotImplementedException();
-        }
+
 
         private void EnsureTables()
         {
             using var cmd = new NpgsqlCommand(CreateTableCommand, _connection);
-            cmd.ExecuteNonQuery();
+             cmd.ExecuteNonQuery();
+
         }
 
         private User ReadUser(IDataRecord record)

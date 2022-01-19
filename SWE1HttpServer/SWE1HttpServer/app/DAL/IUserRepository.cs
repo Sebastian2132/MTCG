@@ -14,9 +14,9 @@ namespace SWE1HttpServer.app.DAL
         User GetUserByAuthToken(string authToken);
 
         bool InsertUser(User user);
-        void UpdateDeck(User user,IEnumerable<Card> package);
+        void UpdateDeck(User user,List<Card> package);
         void UpdateActiveDeck(User user,List<Card> cards);
-        IEnumerable<Card> ShowWholeDeck(User user);
+        List<Card> ShowWholeDeck(User user);
         List<Card> ShowActiveDeck(User user);
         string GetUserInfo(User user);
         void SetUserInfo(User user,string userName,string Bio,string picture);

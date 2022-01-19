@@ -10,18 +10,18 @@ using SWE1HttpServer.app.Models;
 
 namespace SWE1HttpServer.RouteCommands.Cards
 {
-    class BuyPackages : ProtectedRouteCommand
+    class BuyPackageCommand : ProtectedRouteCommand
     {
-        private readonly IRequestManager messageManager;
-        public BuyPackages(IRequestManager messageManager)
+        private readonly IRequestManager _messageManager;
+        public BuyPackageCommand(IRequestManager messageManager)
         {
-            this.messageManager = messageManager;
+            this._messageManager = messageManager;
         }
 
         public override Response Execute()
         {
             var response = new Response();
-            var package = messageManager.AquirePackages(User);
+            var package = _messageManager.AquirePackages(User);
             
             if (package.Any())
             {

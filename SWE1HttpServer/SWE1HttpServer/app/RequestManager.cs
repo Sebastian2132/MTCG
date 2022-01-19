@@ -51,12 +51,13 @@ namespace SWE1HttpServer
        
         public IEnumerable<Card> AquirePackages(User user)
         {
+            //User coins gehen noch nicht
             List<Card> package = new List<Card>();
-            if (user.Coins >= 5)
+            if (user.Coins <= 5)
             {
                 package = packageRepository.GetPackage();
                 userRepository.UpdateDeck(user, package);
-                user.Coins -= 5;
+                //user.Coins -= 5;
             }
             return package;
         }

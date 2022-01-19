@@ -37,7 +37,7 @@ namespace SWE1HttpServer.SWE1HttpServer
 
             // protected routes
        
-            router.AddProtectedRoute(HttpMethod.Post,"/transactions/packages", (r, p)=>new BuyPackages(messageManager));
+            router.AddProtectedRoute(HttpMethod.Post,"/transactions/packages", (r, p)=>new BuyPackageCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Get,"/cards", (r, p)=>new ShowWholeDeck(messageManager));
             router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,r.Payload));
             router.AddProtectedRoute(HttpMethod.Get,"/deck", (r, p)=>new ShowDeckCommand(messageManager));

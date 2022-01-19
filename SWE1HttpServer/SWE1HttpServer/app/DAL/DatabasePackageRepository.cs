@@ -11,29 +11,29 @@ namespace SWE1HttpServer.app.DAL
 {
     class DatabasePackageRepository : IPackageRepository
     {
-        private const string CreateTableCardCommand ="CREATE TABLE IF NOT EXISTS cards( id VARCHAR  PRIMARY KEY NOT NULL, type VARCHAR NOT NULL, element VARCHAR NOT NULL, monsterType VARCHAR, damage INT NOT NULL);";
+        private const string CreateTableCardCommand = "CREATE TABLE IF NOT EXISTS cards( id VARCHAR  PRIMARY KEY NOT NULL, type VARCHAR NOT NULL, element VARCHAR NOT NULL,monstertype VARCHAR, damage INT NOT NULL );";
         private const string CreateTablePackagesCommand = "CREATE TABLE IF NOT EXISTS packages(" +
                                                   "id INT," +
                                                   "card_id VARCHAR REFERENCES cards," +
                                                   "PRIMARY KEY(id, card_id)" +
                                                   ");";
 
-        
-        private const string InsertCardCommand = "INSERT INTO cards(card_id, element, type, damage, monster_type) VALUES(@id, @element, @type, @damage, @m_type);";
+
+        private const string InsertCardCommand = "INSERT INTO cards(id,  type, element,  monstertype, damage) VALUES(@id, @type, @element,  @m_type, @damage);";
 
         private const string InsertPackageCommand = "INSERT INTO packages(id, card_id) VALUES(@id, @card_id);";
 
-        private const string GetNextPackageIdCommand = "SELECT max(id) + 1 \"max_id\" FROM packages;";
-
-        private const string GetLowestPackageIdCommand = "SELECT min(id) \"min_id\" FROM packages;";
-
-        private const string GetNextPackageCommand = "SELECT cards.card_id \"card_id\", element, type, damage, monster_type " +
+        private const string GetNextPackageCommand = "SELECT cards.id \"card_id\", type, element, monstertype , damage" +
                                                      "  FROM packages " +
-                                                     "  JOIN cards ON packages.card_id = cards.card_id" +
+                                                     "  JOIN cards ON packages.card_id = cards.id" +
                                                      " WHERE packages.id = @id" +
                                                      ";";
+        private const string CREATETABLEOWNERSHIPCOMMAND = "CREATE TABLE IF NOT EXISTS owns(" +
+"id VARCHAR REFERENCES cards," +
+"username VARCHAR REFERENCES users,PRIMARY KEY(id,username)" +
+");";
 
-        private const string DeletePackageCommand = "DELETE FROM packages WHERE id = @id;";
+
 
         private readonly NpgsqlConnection _connection;
 
@@ -47,24 +47,36 @@ namespace SWE1HttpServer.app.DAL
         {
             using var cmd = new NpgsqlCommand(CreateTablePackagesCommand, _connection);
             using var cmd2 = new NpgsqlCommand(CreateTableCardCommand, _connection);
-            
+            using var cmd3 = new NpgsqlCommand(CREATETABLEOWNERSHIPCOMMAND, _connection);
+
+
             cmd2.ExecuteNonQuery();
             cmd.ExecuteNonQuery();
+            cmd3.ExecuteNonQuery();
         }
 
         public void AddPackage(List<Card> package)
         {
+            //Change to get acutall Id
+            int packageId = 1;
+
+
+
             foreach (var card in package)
             {
+                //saves every card into card table(DB)
                 using var cmd = new NpgsqlCommand(InsertCardCommand, _connection);
                 cmd.Parameters.AddWithValue("id", card.Id);
-                cmd.Parameters.AddWithValue("element", card.element.ToString());
                 cmd.Parameters.AddWithValue("type", card.type.ToString());
-                cmd.Parameters.AddWithValue("damage", card.Damage);
+                cmd.Parameters.AddWithValue("element", card.element.ToString());
                 cmd.Parameters.AddWithValue("m_type", ((card.type == CardType.Monster) ? ((Monster)card).monsterType.ToString() : DBNull.Value));
+                cmd.Parameters.AddWithValue("damage", card.Damage);
                 cmd.ExecuteNonQuery();
+                //Saves the connection package---card
                 using var cmd2 = new NpgsqlCommand(InsertPackageCommand, _connection);
+                cmd2.Parameters.AddWithValue("id", packageId);
                 cmd2.Parameters.AddWithValue("card_id", card.Id);
+
                 cmd2.ExecuteNonQuery();
             }
         }
@@ -72,94 +84,72 @@ namespace SWE1HttpServer.app.DAL
         public List<Card> GetPackage()
         {
             List<Card> package = new();
-            var id = GetLowestPackageId();
+            //TODO Richtige id einstellen dann kommen auch die richtigen packages!!!!
+            var id = 1;
+            Card card;
             using var cmd = new NpgsqlCommand(GetNextPackageCommand, _connection);
             cmd.Parameters.AddWithValue("id", id);
-
-            // take the first row, if any
             using var reader = cmd.ExecuteReader();
-
             while (reader.Read())
             {
-                package.Add(ReadCard(reader));
+                card = ResolveCard(reader);
+                package.Add(card);
             }
-
             reader.Close();
-
-            if (!DeletePackage(id))
-            {
-                Console.WriteLine("Deleted package did not have 5 cards!");
-            }
-
             return package;
         }
 
-        public static Card ReadCard(IDataRecord record)
+        public Card ResolveCard(IDataRecord reader)
         {
             Card card;
-            Enum.TryParse<ElementType>(Convert.ToString(record["element"]), out var elementType);
-            if (Convert.ToString(record["type"]) == "Monster")
-            {
-                Enum.TryParse<MonsterType>(Convert.ToString(record["monster_type"]), out var monsterType);
 
-                card = new Monster( elementType, monsterType,
-                    Convert.ToInt32(record["damage"]),Convert.ToString(record["card_id"]));
+            if (Convert.ToString(reader["type"]) == "Monster")
+            {
+                card = new Monster(getElement(Convert.ToString(reader["element"])), getMonsterType(Convert.ToString(reader["monstertype"])), Convert.ToInt32(reader["damage"]), Convert.ToString(reader["card_id"]));
+
             }
             else
             {
-                card = new Spell(elementType,
-                    Convert.ToInt32(record["damage"]),Convert.ToString(record["card_id"]) );
+                card = new Spell(getElement(Convert.ToString(reader["element"])), Convert.ToInt32(reader["damage"]), Convert.ToString(reader["card_id"]));
             }
+
+
             return card;
+
         }
-
-        private int GetNextPackageId()
+        public MonsterType getMonsterType(string type)
         {
-            int id = 0;
-            using var cmd = new NpgsqlCommand(GetNextPackageIdCommand, _connection);
-
-            // take the first row, if any
-            using var reader = cmd.ExecuteReader();
-
-            if (reader.Read())
+            switch (type)
             {
-                if (reader["max_id"] != DBNull.Value)
-                    id = Convert.ToInt32(reader["max_id"]);
+                case "Goblin": return MonsterType.Goblin;
+                case "Dragon": return MonsterType.Dragon;
+                case "Wizzard": return MonsterType.Wizzard;
+                case "Ork": return MonsterType.Ork;
+                case "Knight": return MonsterType.Knight;
+                case "Kraken": return MonsterType.Kraken;
+                case "Elve": return MonsterType.Elve;
+                case "Troll": return MonsterType.Troll;
+                default: return MonsterType.Goblin;
             }
-
-            reader.Close();
-
-            return id;
         }
-
-        private int GetLowestPackageId()
+        public ElementType getElement(string element)
         {
-            int id = 0;
-            using var cmd = new NpgsqlCommand(GetLowestPackageIdCommand, _connection);
-
-            // take the first row, if any
-            using var reader = cmd.ExecuteReader();
-
-            if (reader.Read())
+            switch (element)
             {
-                if (reader["min_id"] != DBNull.Value)
-                    id = Convert.ToInt32(reader["min_id"]);
+                case "Water": return ElementType.Water;
+                case "Fire": return ElementType.Fire;
+                default: return ElementType.Normal;
             }
-
-            reader.Close();
-
-            return id;
         }
-
-        private bool DeletePackage(int id)
+        private void removePackageandCard()
         {
-            var affectedRows = 0;
-            using var cmd = new NpgsqlCommand(DeletePackageCommand, _connection);
-            cmd.Parameters.AddWithValue("id", id);
 
-            // take the first row, if any
-            affectedRows = cmd.ExecuteNonQuery();
-            return affectedRows == 5;
         }
     }
 }
+
+
+
+
+
+
