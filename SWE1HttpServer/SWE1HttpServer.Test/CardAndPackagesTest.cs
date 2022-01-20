@@ -1,4 +1,4 @@
-/* using NUnit.Framework;
+using NUnit.Framework;
 using SWE1HttpServer.app.DAL;
 using SWE1HttpServer.app.Models;
 using System;
@@ -15,39 +15,47 @@ namespace SWE1HttpServer.Test
         public void CreateOneNewMonsterCardAndReturnValues()
         {
             // arrange
-            Monster MonsterCard = new Monster(ElementType.Normal,MonsterType.Goblin,10);
+            Monster MonsterCard = new Monster(ElementType.Normal, MonsterType.Goblin, 10, "dsfs");
             string result = "";
 
             // act
-            result=MonsterCard.getName();
+            result = MonsterCard.getName();
             // assert
-            Assert.AreEqual("NormalGoblin",result);
+            Assert.AreEqual("NormalGoblin", result);
         }
         [Test]
         public void CreateOneNewSpellCardAndReturnValues()
         {
             // arrange
-            Spell MonsterCard = new Spell(ElementType.Fire,10);
+            Spell MonsterCard = new Spell(ElementType.Fire, 10, "dsfs");
             string result = "";
 
             // act
-            result=MonsterCard.getName();
+            result = MonsterCard.getName();
             // assert
-            Assert.AreEqual("FireSpell",result );
+            Assert.AreEqual("FireSpell", result);
         }
-        [Test]
-        public void CreateOnePackageAndReturnIt()
-        {
-            // arrange
-           var package= PackageGenerator.generatePackage();
+            [Test]
+            public void CreateDeck()
+            {
+                // arrange
+                List<Card> deck= new();
+                Spell MonsterCard = new Spell(ElementType.Fire, 10, "dsfs");
+                Spell MonsterCard2 = new Spell(ElementType.Fire, 10, "dsfs");
+                Spell MonsterCard3 = new Spell(ElementType.Fire, 10, "dsfs");
+                Spell MonsterCard4 = new Spell(ElementType.Fire, 10, "dsfs");
+                deck.Add(MonsterCard);
+                deck.Add(MonsterCard2);
+                deck.Add(MonsterCard3);
+                deck.Add(MonsterCard4);
 
-            // act
-            
-            // assert
-            Assert.AreEqual(5,package.Count() );
+     
+                // assert
+                Assert.AreEqual(4, deck.Count());
+            }
         }
 
-        
+
+
     }
-}
- */
+

@@ -16,8 +16,9 @@ namespace SWE1HttpServer.SWE1HttpServer
     {
         static void Main(string[] args)
         {
+            var gamelogic = new GameLogic();
             var db = new Database("Host=localhost;Port=5431;Username=postgres;Password=postgres;Database=mtcgdb");
-            var messageManager = new RequestManager(db.UserRepository,db.PackageRepository);
+            var messageManager = new RequestManager(db.UserRepository,db.PackageRepository,gamelogic);
 
             var identityProvider = new MessageIdentityProvider(db.UserRepository);
             var routeParser = new IdRouteParser();
@@ -44,7 +45,9 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Put,"/deck", (r, p)=>new UpdateDeckCommand(messageManager,r.Payload));
             router.AddProtectedRoute(HttpMethod.Get,"/users/{id}", (r, p)=>new GetUSerDataCommand(messageManager,p["id"]));
             router.AddProtectedRoute(HttpMethod.Put,"/users/{id}", (r, p)=>new SetUserDataCommand(messageManager,p["id"],Deserialize<Dictionary<string,string>>(r.Payload)));
-            //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new SetUserDataCommand(messageManager);
+            router.AddProtectedRoute(HttpMethod.Post,"/battles",(r, p)=>new StartBattleCommand(messageManager));
+            //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new GetStatCommand(messageManager);
+            //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new GetScoreBoardCommand(messageManager);
 
         }
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SWE1HttpServer.core.Server
@@ -23,14 +24,17 @@ namespace SWE1HttpServer.core.Server
             listener = new Listener.HttpListener(address, port);
             this.router=router;
         }
+
         public void Start()
         {
+
             listener.Start();
             isListening = true;
         
             while (isListening){
+                
                 var client = listener.AcceptClient();
-                HandleCLient(client);
+                ThreadPool.QueueUserWorkItem(HandleClient,client);
             }
         }
 
@@ -40,8 +44,9 @@ namespace SWE1HttpServer.core.Server
             listener.Stop();
         }
 
-        private void HandleCLient(IClient client){
-            var request = client.ReceiveRequest();
+        private void HandleClient(object client){
+            var tClient = client as IClient;
+            var request = tClient.ReceiveRequest();
 
             Response.Response response;
             try{
@@ -59,7 +64,7 @@ namespace SWE1HttpServer.core.Server
                     StatusCode = Response.StatusCode.Unauthorized
                 };
             }
-            client.SendResponse(response);
+            tClient.SendResponse(response);
         }
     }
 

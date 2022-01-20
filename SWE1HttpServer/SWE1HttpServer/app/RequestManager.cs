@@ -14,14 +14,18 @@ namespace SWE1HttpServer
 {
     public class RequestManager : IRequestManager
     {
-        
+
         private readonly IUserRepository userRepository;
         private readonly IPackageRepository packageRepository;
+        private readonly GameLogic gameLogic;
+        private Queue<Tuple<User, List<Card>>> battleQueue;
 
-        public RequestManager(IUserRepository userRepository, IPackageRepository packageRepository)
+        public RequestManager(IUserRepository userRepository, IPackageRepository packageRepository, GameLogic gamelogic)
         {
             this.userRepository = userRepository;
             this.packageRepository = packageRepository;
+            this.gameLogic = gamelogic;
+            this.battleQueue = new Queue<Tuple<User, List<Card>>>();
         }
 
         public User LoginUser(Credentials credentials)
@@ -48,16 +52,17 @@ namespace SWE1HttpServer
             }
         }
 
-       
+
         public IEnumerable<Card> AquirePackages(User user)
         {
             //User coins gehen noch nicht
             List<Card> package = new List<Card>();
-            if (user.Coins <= 5)
+
+            if (user.Coins >= 5)
             {
                 package = packageRepository.GetPackage();
                 userRepository.UpdateDeck(user, package);
-                //user.Coins -= 5;
+                userRepository.UpdateUserCoins(user.Username);
             }
             return package;
         }
@@ -70,6 +75,36 @@ namespace SWE1HttpServer
         public void AddPackage(List<Card> package)
         {
             packageRepository.AddPackage(package);
+
+        }
+        public bool setDeck(string cards, User user)
+        {
+            List<Card> newActiveDeck = new List<Card>();
+            Card card;
+            //check somewhere where we check for authToken=username
+            //apparentally not implemented
+            List<Card> allCards = userRepository.allCards(user);
+            string[] fullInfo = JsonConvert.DeserializeObject<string[]>(cards);
+            if (fullInfo.Length <= 3)
+            {
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < fullInfo.Length; i++)
+                {
+                    card = allCards.Find(x => x.Id == fullInfo[i]);
+                    if (card == null)
+                    {
+                        return false;
+                    }
+                    newActiveDeck.Add(card);
+                }
+                userRepository.UpdateActiveDeck(user, newActiveDeck);
+                return true;
+            }
+
+
 
         }
 
@@ -142,54 +177,61 @@ namespace SWE1HttpServer
             return userRepository.ShowActiveDeck(user);
         }
 
-        public bool setDeck(string cards, User user)
-        {
-            List<Card> newActiveDeck = new List<Card>();
-            Card card;
-            List<Card> allCards = userRepository.allCards(user);
-            string[] fullInfo = JsonConvert.DeserializeObject<string[]>(cards);
-            if (fullInfo.Length <= 3)
-            {
-                return false;
-            }
-            else
-            {
-                for (int i = 0; i < fullInfo.Length; i++)
-                {
-                    card = allCards.Find(x => x.Id == fullInfo[i]);
-                    if(card==null){
-                        return false;
-                    }
-                    newActiveDeck.Add(card);
-                }
-                userRepository.UpdateActiveDeck(user, newActiveDeck);
-                return true;
-            }
 
-
-
-        }
 
         public string GetUserInfo(User user, string userName)
         {
-            if(user.Username != userName){
+            if (user.Username != userName)
+            {
                 throw new RouteNotAuthorizedException();
 
-            }else{
+            }
+            else
+            {
                 return userRepository.GetUserInfo(user);
             }
         }
 
         public bool SetUserInfo(User user, string userName, Dictionary<string, string> info)
         {
-                 if(user.Username != userName){
-                     return false;
-            }else{
-                userRepository.SetUserInfo(user,info["Name"], info["Bio"],info["Image"]);
+            if (user.Username != userName)
+            {
+                return false;
+            }
+            else
+            {
+                userRepository.SetUserInfo(user, info["Name"], info["Bio"], info["Image"]);
                 return true;
             }
-                
-            
+
+
         }
+
+        public void StartBattle(User user)
+        {
+            var deck = userRepository.ShowActiveDeck(user);
+            if (battleQueue.TryDequeue(out var playerOne) && (playerOne.Item1.Username == user.Username)) 
+            {
+                battleQueue.Enqueue(playerOne);
+                throw new InvalidOperationException();
+
+            }
+            else if (playerOne != null)
+            {
+                gameLogic.playTheGame(playerOne.Item2, deck);
+            }
+            else
+            {
+
+                battleQueue.Enqueue(new Tuple< User, List<Card>>(user,deck));
+            }
+        }
+
+        public bool checkBattle(){
+
+            return gameLogic.comp;
+        }
+
+
     }
 }

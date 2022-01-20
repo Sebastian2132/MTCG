@@ -25,12 +25,12 @@ namespace SWE1HttpServer.app.Models
             {
                 if (cardOne.type == CardType.Monster && cardTwo.type == CardType.Monster)
                 {
-                newLog += "A: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) vs PlayerB: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) => " + cardOne.getCardNameWithoutElement() + " defeats " + cardTwo.getCardNameWithoutElement();
+                    newLog += "A: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) vs PlayerB: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) => " + cardOne.getCardNameWithoutElement() + " defeats " + cardTwo.getCardNameWithoutElement();
 
                 }
                 else
                 {
-                newLog += "A: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) vs PlayerB: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) => " + cardOne.Damage + " VS " + cardTwo.Damage + "-> "+calculatedDamageOne+" VS "+calculatedDamageTwo+" => "+cardOne.getName()+" wins";
+                    newLog += "A: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) vs PlayerB: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) => " + cardOne.Damage + " VS " + cardTwo.Damage + "-> " + calculatedDamageOne + " VS " + calculatedDamageTwo + " => " + cardOne.getName() + " wins";
 
                 }
             }
@@ -39,12 +39,12 @@ namespace SWE1HttpServer.app.Models
 
                 if (cardOne.type == CardType.Monster && cardTwo.type == CardType.Monster)
                 {
-                newLog += "B: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) vs PlayerA: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) => " + cardTwo.getCardNameWithoutElement() + " defeats " + cardOne.getCardNameWithoutElement();
+                    newLog += "B: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) vs PlayerA: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) => " + cardTwo.getCardNameWithoutElement() + " defeats " + cardOne.getCardNameWithoutElement();
 
                 }
                 else
                 {
-                newLog += "B: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) vs PlayerA: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) => " + cardTwo.Damage + " VS " + cardOne.Damage + "-> "+calculatedDamageTwo+" VS "+calculatedDamageOne+" => "+cardTwo.getName()+" wins";
+                    newLog += "B: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) vs PlayerA: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) => " + cardTwo.Damage + " VS " + cardOne.Damage + "-> " + calculatedDamageTwo + " VS " + calculatedDamageOne + " => " + cardTwo.getName() + " wins";
 
                 }
             }
@@ -58,12 +58,18 @@ namespace SWE1HttpServer.app.Models
                 {
 
                 }
-                newLog += "A: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) vs PlayerB: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) => " + cardOne.Damage + " VS " + cardTwo.Damage + "-> "+calculatedDamageOne+" VS "+calculatedDamageTwo+" => Draw";
+                newLog += "A: " + cardOne.getName() + " (" + cardOne.Damage + " Damage) vs PlayerB: " + cardTwo.getName() + " (" + cardTwo.Damage + " Damage) => " + cardOne.Damage + " VS " + cardTwo.Damage + "-> " + calculatedDamageOne + " VS " + calculatedDamageTwo + " => Draw";
 
             }
 
             this.gameLog.Add(newLog);
 
+        }
+        public void GameLog2()
+        {   
+            string newLog = "";
+            newLog += "Loose of cards was prevented you had luck";
+            this.gameLog.Add(newLog);
         }
         public void clearLog()
         {
@@ -77,11 +83,14 @@ namespace SWE1HttpServer.app.Models
             {
                 playerLog += logitem + "\n";
             }
-            playerLog+=new string('-', 60)+"\n";
-            if(winner!="D"){
-            playerLog += "Player"+winner+" won!" + "\n";
+            playerLog += new string('-', 60) + "\n";
+            if (winner != "D")
+            {
+                playerLog += "Player" + winner + " won!" + "\n";
 
-            }else{
+            }
+            else
+            {
                 playerLog += "It was a Draw!\n";
 
             }

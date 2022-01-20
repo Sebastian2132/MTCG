@@ -11,6 +11,7 @@ namespace SWE1HttpServer.app.Models
 
     public class GameLogic
     {
+        public bool comp;
         private readonly List<(ElementType, ElementType)> _elementRules = new List<(ElementType, ElementType)>{
              (ElementType.Fire,ElementType.Normal),
              (ElementType.Water,ElementType.Fire),
@@ -20,16 +21,18 @@ namespace SWE1HttpServer.app.Models
         public void playTheGame(List<Card> deckOne, List<Card> deckTwo)
         {
             int rounds = 0;
-            int index=0;
-            int index2=0;
+            bool saveRound = true;
+            int index = 0;
+            int index2 = 0;
+            comp = false;
             (int, int) damageValues;
             Card card, card2;
             Random random = new Random();
             Logger log = new Logger();
             while (rounds < 101 && deckOne.Any() && deckTwo.Any())
             {
-                index = random.Next(deckOne.Count()-1);
-                index2 = random.Next(deckTwo.Count()-1);
+                index = random.Next(deckOne.Count() - 1);
+                index2 = random.Next(deckTwo.Count() - 1);
                 card = deckOne[index];
                 card2 = deckTwo[index2];
                 if (card.type == CardType.Monster && card2.type == CardType.Monster)
@@ -46,41 +49,65 @@ namespace SWE1HttpServer.app.Models
 
                 if (damageValues.Item1 < damageValues.Item2)
                 {
-                    
-                    deckTwo.Add(card);
-                    deckTwo.Add(card2);
-                    deckOne.RemoveAt(index);
-                    deckTwo.RemoveAt(index2);
-                    log.GameLog(card,card2,damageValues.Item1,damageValues.Item2);
+                    if (random.Next(0,5)<100&&saveRound==true)
+                    {
+
+                        saveRound = false;
+
+                    }
+                    else
+                    {
+                        deckTwo.Add(card);
+                        deckTwo.Add(card2);
+                        deckOne.RemoveAt(index);
+                        deckTwo.RemoveAt(index2);
+                        log.GameLog(card, card2, damageValues.Item1, damageValues.Item2);
+                    }
+
 
 
                 }
                 else if (damageValues.Item1 > damageValues.Item2)
                 {
+                     if (random.Next(0,101)<5&&saveRound==true)
+                    {
+                        log.GameLog2();
+                        saveRound = false;
+
+                    }else{
                     deckOne.Add(card);
                     deckOne.Add(card2);
                     deckOne.RemoveAt(index);
                     deckTwo.RemoveAt(index2);
-                    
+                    log.GameLog(card, card2, damageValues.Item1, damageValues.Item2);
 
-                    log.GameLog(card,card2,damageValues.Item1,damageValues.Item2);
-                }else{
-                    log.GameLog(card,card2,damageValues.Item1,damageValues.Item2);
+                    }
+
                 }
-                
+                else
+                {
+                    log.GameLog(card, card2, damageValues.Item1, damageValues.Item2);
+                }
+
                 rounds++;
             }
-            if(deckOne.Any() && !deckTwo.Any()){ 
-            Console.WriteLine(log.getGameLog("A"));
+            if (deckOne.Any() && !deckTwo.Any())
+            {
+                Console.WriteLine(log.getGameLog("A"));
 
-            }else if(!deckOne.Any() && deckTwo.Any()){
-            Console.WriteLine(log.getGameLog("B"));
+            }
+            else if (!deckOne.Any() && deckTwo.Any())
+            {
+                Console.WriteLine(log.getGameLog("B"));
 
-            }else{
-            Console.WriteLine(log.getGameLog("D"));
+            }
+            else
+            {
+                Console.WriteLine(log.getGameLog("D"));
 
             }
             //log.clearLog();
+            comp = true;
 
 
         }

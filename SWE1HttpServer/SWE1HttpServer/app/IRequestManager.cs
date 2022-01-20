@@ -19,5 +19,9 @@ namespace SWE1HttpServer
         string GetUserInfo(User user,string userName);
 
         bool SetUserInfo(User user,string userName,Dictionary<string, string> info);
+
+        void StartBattle(User user);
+        
+        bool checkBattle();
     }
 }

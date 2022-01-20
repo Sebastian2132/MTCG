@@ -11,7 +11,14 @@ namespace SWE1HttpServer.app.DAL
 {
     class DatabasePackageRepository : IPackageRepository
     {
-        private const string CreateTableCardCommand = "CREATE TABLE IF NOT EXISTS cards( id VARCHAR  PRIMARY KEY NOT NULL, type VARCHAR NOT NULL, element VARCHAR NOT NULL,monstertype VARCHAR, damage INT NOT NULL );";
+        private const string CreateTableCardCommand = "CREATE TABLE IF NOT EXISTS cards("+
+        " id VARCHAR PRIMARY KEY NOT NULL,"  +
+        "  type VARCHAR NOT NULL,"+
+        " element VARCHAR NOT NULL,"+
+        "monstertype VARCHAR,"+
+         "damage INT NOT NULL,"+
+         "isMainDeck VARCHAR REFERENCES users(username)"+
+          ");";
         private const string CreateTablePackagesCommand = "CREATE TABLE IF NOT EXISTS packages(" +
                                                   "id INT," +
                                                   "card_id VARCHAR REFERENCES cards," +
@@ -32,6 +39,8 @@ namespace SWE1HttpServer.app.DAL
 "id VARCHAR REFERENCES cards," +
 "username VARCHAR REFERENCES users,PRIMARY KEY(id,username)" +
 ");";
+        private const string GetNewPackageIdCommand = "SELECT max(id) + 1 \"id\" FROM packages;";
+        private const string GetNextPackageIdCommand = "SELECT min(id) \"id\" FROM packages;";
 
 
 
@@ -57,8 +66,24 @@ namespace SWE1HttpServer.app.DAL
 
         public void AddPackage(List<Card> package)
         {
+            int packageId = 0;
+
+
+
+
+
+
+            using var cmd3 = new NpgsqlCommand(GetNewPackageIdCommand, _connection);
+            using var reader = cmd3.ExecuteReader();
+            if (reader.Read())
+            {
+                if (reader["id"] != DBNull.Value)
+                    packageId = Convert.ToInt32(reader["id"]);
+            }
+
+            reader.Close();
             //Change to get acutall Id
-            int packageId = 1;
+
 
 
 
@@ -79,23 +104,32 @@ namespace SWE1HttpServer.app.DAL
 
                 cmd2.ExecuteNonQuery();
             }
+            packageId = packageId + 1;
         }
 
         public List<Card> GetPackage()
         {
             List<Card> package = new();
             //TODO Richtige id einstellen dann kommen auch die richtigen packages!!!!
-            var id = 1;
+            var id = 0;
+            using var cmd3 = new NpgsqlCommand(GetNextPackageIdCommand, _connection);
+            using var reader = cmd3.ExecuteReader();
+            if (reader.Read())
+            {
+                if (reader["id"] != DBNull.Value)
+                    id = Convert.ToInt32(reader["id"]);
+            }
+            reader.Close();
             Card card;
             using var cmd = new NpgsqlCommand(GetNextPackageCommand, _connection);
             cmd.Parameters.AddWithValue("id", id);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            using var reader2 = cmd.ExecuteReader();
+            while (reader2.Read())
             {
-                card = ResolveCard(reader);
+                card = ResolveCard(reader2);
                 package.Add(card);
             }
-            reader.Close();
+            reader2.Close();
             return package;
         }
 
