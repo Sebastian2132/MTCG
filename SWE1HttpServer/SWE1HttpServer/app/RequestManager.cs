@@ -206,6 +206,21 @@ namespace SWE1HttpServer
 
 
         }
+        
+        public bool GetScoreboard(User user, string userName, Dictionary<string, string> info)
+        {
+            if (user.Username != userName)
+            {
+                return false;
+            }
+            else
+            {
+                userRepository.SetUserInfo(user, info["Name"], info["Bio"], info["Image"]);
+                return true;
+            }
+
+
+        }
 
         public void StartBattle(User user)
         {
@@ -232,6 +247,12 @@ namespace SWE1HttpServer
             return gameLogic.comp;
         }
 
+        public string GetStat(User user)
+        {
+         
+                return userRepository.GetStat(user);
 
+            
+        }
     }
 }

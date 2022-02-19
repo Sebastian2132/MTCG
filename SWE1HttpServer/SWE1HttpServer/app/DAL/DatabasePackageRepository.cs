@@ -82,7 +82,6 @@ namespace SWE1HttpServer.app.DAL
             }
 
             reader.Close();
-            //Change to get acutall Id
 
 
 
@@ -110,7 +109,6 @@ namespace SWE1HttpServer.app.DAL
         public List<Card> GetPackage()
         {
             List<Card> package = new();
-            //TODO Richtige id einstellen dann kommen auch die richtigen packages!!!!
             var id = 0;
             using var cmd3 = new NpgsqlCommand(GetNextPackageIdCommand, _connection);
             using var reader = cmd3.ExecuteReader();

@@ -23,5 +23,7 @@ namespace SWE1HttpServer
         void StartBattle(User user);
         
         bool checkBattle();
+
+        string GetStat(User user);
     }
 }

@@ -23,5 +23,7 @@ namespace SWE1HttpServer.app.DAL
 
         List<Card> allCards(User user);
         void UpdateUserCoins(string username);
+
+        string GetStat(User user);
     }
 }

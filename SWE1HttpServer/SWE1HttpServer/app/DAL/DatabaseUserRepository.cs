@@ -34,6 +34,8 @@ namespace SWE1HttpServer.app.DAL
         private const string SetMainDeckCommmand = "Update cards SET isMainDeck = @username WHERE id = @id;";
         //  private const string SetMainDeckCommmand = "INSERT INTO cards(isMainDeck) VALUES (@username) WHERE id = @id";
         private const string InsertUserDataCommand = "UPDATE users SET name = @name, bio = @bio, picture=@pic WHERE username = @username;";
+        private const string GetUserStatCommand ="SELECT score FROM users WHERE username=@username";
+        private const string GetUserDataCommand = "SELECT name,bio,picture FROM users WHERE username = @username";
 
         private readonly NpgsqlConnection _connection;
 
@@ -94,7 +96,17 @@ namespace SWE1HttpServer.app.DAL
 
         public string GetUserInfo(User user)
         {
-            throw new NotImplementedException();
+            string response = "";
+            using var cmd = new NpgsqlCommand(GetUserDataCommand, _connection);
+            cmd.Parameters.AddWithValue("username", user.Username);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                
+                
+                    response += "Name: "+reader["name"]+" Bio: "+reader["bio"]+" Picture: "+reader["picture"];
+            }
+            return response;
         }
 
         public void UpdateDeck(User user, List<Card> package)
@@ -174,6 +186,20 @@ namespace SWE1HttpServer.app.DAL
             }
 
             return deck;
+        }
+        public string GetStat(User user)
+        {
+            string response = "";
+            using var cmd = new NpgsqlCommand(GetUserStatCommand, _connection);
+            cmd.Parameters.AddWithValue("username", user.Username);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                
+                if (reader["score"] != DBNull.Value)
+                    response = Convert.ToString(reader["score"]);
+            }
+            return response;
         }
 
         private Card ResolveCard(NpgsqlDataReader reader)
@@ -269,5 +295,7 @@ namespace SWE1HttpServer.app.DAL
             cmd.Parameters.AddWithValue("username", username);
             cmd.ExecuteNonQuery();
         }
+
+        
     }
 }
