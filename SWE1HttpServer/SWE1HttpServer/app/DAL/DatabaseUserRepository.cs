@@ -296,6 +296,9 @@ namespace SWE1HttpServer.app.DAL
             cmd.ExecuteNonQuery();
         }
 
-        
+        public void updateElo(User playerOne, User playerTwo, string winner)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

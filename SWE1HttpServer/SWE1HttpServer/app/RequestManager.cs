@@ -172,7 +172,7 @@ namespace SWE1HttpServer
             }
         }
 
-        public List<Card> ShowActiveDeck(User user)
+ public List<Card> ShowActiveDeck(User user)
         {
             return userRepository.ShowActiveDeck(user);
         }
@@ -240,11 +240,17 @@ namespace SWE1HttpServer
 
                 battleQueue.Enqueue(new Tuple< User, List<Card>>(user,deck));
             }
+             if(gameLogic.comp.Item2==""&&gameLogic.comp.Item1==true){
+                    userRepository.updateElo(playerOne.Item1,user,gameLogic.comp.Item2);
+             }else{
+
+             }
         }
 
         public bool checkBattle(){
-
-            return gameLogic.comp;
+             
+          
+            return gameLogic.comp.Item1;
         }
 
         public string GetStat(User user)

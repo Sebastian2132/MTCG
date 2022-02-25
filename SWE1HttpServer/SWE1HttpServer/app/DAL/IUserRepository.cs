@@ -25,5 +25,6 @@ namespace SWE1HttpServer.app.DAL
         void UpdateUserCoins(string username);
 
         string GetStat(User user);
+        void updateElo(User playerOne,User playerTwo,string winner);
     }
 }

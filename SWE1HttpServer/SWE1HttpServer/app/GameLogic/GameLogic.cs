@@ -11,7 +11,7 @@ namespace SWE1HttpServer.app.Models
 
     public class GameLogic
     {
-        public bool comp;
+        public Tuple<bool, string> comp;
         private readonly List<(ElementType, ElementType)> _elementRules = new List<(ElementType, ElementType)>{
              (ElementType.Fire,ElementType.Normal),
              (ElementType.Water,ElementType.Fire),
@@ -24,7 +24,6 @@ namespace SWE1HttpServer.app.Models
             bool saveRound = true;
             int index = 0;
             int index2 = 0;
-            comp = false;
             (int, int) damageValues;
             Card card, card2;
             Random random = new Random();
@@ -93,21 +92,25 @@ namespace SWE1HttpServer.app.Models
             }
             if (deckOne.Any() && !deckTwo.Any())
             {
+               Tuple<bool,string> comp = new Tuple<bool,string>(true,"A");
                 Console.WriteLine(log.getGameLog("A"));
+
 
             }
             else if (!deckOne.Any() && deckTwo.Any())
             {
+                             Tuple<bool,string> comp = new Tuple<bool,string>(true,"A");
                 Console.WriteLine(log.getGameLog("B"));
 
             }
             else
             {
+                                             Tuple<bool,string> comp = new Tuple<bool,string>(true,"A");
+
                 Console.WriteLine(log.getGameLog("D"));
 
             }
             //log.clearLog();
-            comp = true;
 
 
         }
