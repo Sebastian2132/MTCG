@@ -21,16 +21,15 @@ namespace SWE1HttpServer.app.Models
         public void playTheGame(List<Card> deckOne, List<Card> deckTwo)
         {
             int rounds = 0;
-            int index = 0;
-            int index2 = 0;
+           
             (float, float) damageValues;
             Card card, card2;
             Random random = new Random();
             Logger log = new Logger();
             while (rounds < 101 && deckOne.Any() && deckTwo.Any())
             {
-                index = random.Next(deckOne.Count() - 1);
-                index2 = random.Next(deckTwo.Count() - 1);
+                int index = random.Next(deckOne.Count() - 1);
+                int index2 = random.Next(deckTwo.Count() - 1);
                 card = deckOne[index];
                 card2 = deckTwo[index2];
                 if (card.type == CardType.Monster && card2.type == CardType.Monster)
@@ -95,7 +94,7 @@ namespace SWE1HttpServer.app.Models
                 Console.WriteLine(log.getGameLog("B"));
 
             }
-            else
+            else if(rounds>100)
             {
                 Tuple<bool, string> comp = new Tuple<bool, string>(true, "D");
                 //Give the log back to client here!!
@@ -103,7 +102,7 @@ namespace SWE1HttpServer.app.Models
                 Console.WriteLine(log.getGameLog("D"));
 
             }
-            //log.clearLog();
+            log.clearLog();
 
 
         }

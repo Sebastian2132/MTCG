@@ -35,13 +35,12 @@ namespace SWE1HttpServer.app.DAL
         private const string InsertUserDataCommand = "UPDATE users SET name = @name, bio = @bio, picture=@pic WHERE username = @username;";
         private const string GetUserStatCommand = "SELECT score FROM users WHERE username=@username";
         private const string GetUserDataCommand = "SELECT name,bio,picture FROM users WHERE username = @username";
-        private const string GetRandomIdsCommand = "SELECT id FROM cards" +
-                                                      "  JOIN owns ON id = owns.id" +
-                                                      " WHERE username = @username" +
-                                                      ";";
+        private const string GetRandomIdsCommand = "select id from owns where username=@username order by random() limit 4";
 
         private const string UpdateEloWinnerCommand = "UPDATE users SET score = score+3 WHERE username = @username;";
         private const string UpdateEloLooserCommand = "UPDATE users SET score = score-5 WHERE username = @username;";
+        private const string GetScoreboardCommand = "SELECT score FROM users";
+        private const string DeconfigureDeckCommand = "UPDATE cards SET isMainDeck = null WHERE isMainDeck = @username;";
 
         private readonly NpgsqlConnection _connection;
 
@@ -117,15 +116,16 @@ namespace SWE1HttpServer.app.DAL
 
         public void UpdateDeck(User user, List<Card> package)
         {
+             var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
+            cmd2.Parameters.AddWithValue("username", user.Username);
+                cmd2.ExecuteNonQuery();
             for (int i = 0; i < package.Count; i++)
             {
                 var cmd = new NpgsqlCommand(InsertNewOwnerCommand, _connection);
                 cmd.Parameters.AddWithValue("id", package[i].Id);
                 cmd.Parameters.AddWithValue("user", user.Username);
                 cmd.ExecuteNonQuery();
-                var cmd2 = new NpgsqlCommand(RemoveFromPackageCommand, _connection);
-                cmd2.Parameters.AddWithValue("id", package[i].Id);
-                cmd2.ExecuteNonQuery();
+                
 
 
             }
@@ -234,9 +234,12 @@ namespace SWE1HttpServer.app.DAL
             //check later if you own the card!!
             for (int i = 0; i < cards.Count; i++)
             {
+                  var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
                 var cmd = new NpgsqlCommand(SetMainDeckCommmand, _connection);
                 cmd.Parameters.AddWithValue("id", cards[i].Id);
                 cmd.Parameters.AddWithValue("username", user.Username);
+                cmd2.Parameters.AddWithValue("username", user.Username);
+                cmd2.ExecuteNonQuery();
                 cmd.ExecuteNonQuery();
 
 
@@ -321,7 +324,7 @@ namespace SWE1HttpServer.app.DAL
                 cmd2.ExecuteNonQuery();
 
             }
-           
+
         }
 
         public string[] GetRandomIds(User user)
@@ -343,6 +346,9 @@ namespace SWE1HttpServer.app.DAL
 
         public void UpdateActiveDeckRandom(User user, List<Card> cards)
         {
+            var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
+            cmd2.Parameters.AddWithValue("username", user.Username);
+                cmd2.ExecuteNonQuery();
             //check later if you own the card!!
             for (int i = 0; i < cards.Count; i++)
             {
@@ -353,7 +359,25 @@ namespace SWE1HttpServer.app.DAL
 
 
 
+
             }
+        }
+
+        public string GetScoreboard()
+        {
+            string response = "";
+            int i = 1;
+            using var cmd = new NpgsqlCommand(GetScoreboardCommand, _connection);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+
+                if (reader["score"] != DBNull.Value)
+                    response += Convert.ToString(i) + ") " + Convert.ToString(reader["score"]) + "\n";
+
+                i++;
+            }
+            return response;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Put,"/users/{id}", (r, p)=>new SetUserDataCommand(messageManager,p["id"],Deserialize<Dictionary<string,string>>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Post,"/battles",(r, p)=>new StartBattleCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Get,"/stats", (r, p)=>new GetStatAndScoreBoardCommand(messageManager));
-            //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new GetScoreBoardCommand(messageManager);
+            router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new GetScoreBoardCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Put,"/deckrandom", (r, p)=>new SetRandomDeckCommand(messageManager));
 
         }

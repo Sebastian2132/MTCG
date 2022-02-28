@@ -65,12 +65,7 @@ namespace SWE1HttpServer.app.Models
             this.gameLog.Add(newLog);
 
         }
-        public void GameLog2()
-        {   
-            string newLog = "";
-            newLog += "Loose of cards was prevented you had luck";
-            this.gameLog.Add(newLog);
-        }
+        
         public void clearLog()
         {
             this.gameLog.Clear();

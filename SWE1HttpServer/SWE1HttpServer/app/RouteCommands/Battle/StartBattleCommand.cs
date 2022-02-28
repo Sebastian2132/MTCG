@@ -22,9 +22,8 @@ namespace SWE1HttpServer.RouteCommands.Cards
 
         public override Response Execute()
         {
-            _requestManager.StartBattle(User);
             Response response = new();
-
+            _requestManager.StartBattle(User);
             System.Threading.SpinWait.SpinUntil(() => _requestManager.checkBattle());
             Console.WriteLine("Program battle...");
 

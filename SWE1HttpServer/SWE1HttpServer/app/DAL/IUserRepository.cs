@@ -28,5 +28,6 @@ namespace SWE1HttpServer.app.DAL
 
         string GetStat(User user);
         void updateElo(User playerOne,User playerTwo,string winner);
+        string GetScoreboard();
     }
 }

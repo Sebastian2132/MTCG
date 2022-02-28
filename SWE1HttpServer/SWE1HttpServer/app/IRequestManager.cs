@@ -25,5 +25,6 @@ namespace SWE1HttpServer
         bool checkBattle();
 
         string GetStat(User user);
+        string GetScoreboard();
     }
 }

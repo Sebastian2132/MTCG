@@ -252,7 +252,9 @@ namespace SWE1HttpServer
 
         public bool checkBattle()
         {
-
+            if(gameLogic.comp.Item1==true){
+                
+            }
 
             return gameLogic.comp.Item1;
         }
@@ -289,6 +291,11 @@ namespace SWE1HttpServer
                 userRepository.UpdateActiveDeckRandom(user, newActiveDeck);
                 return true;
             }
+        }
+
+        public string GetScoreboard()
+        {
+            return userRepository.GetScoreboard();
         }
     }
 }
