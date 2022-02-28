@@ -21,10 +21,9 @@ namespace SWE1HttpServer.app.Models
         public void playTheGame(List<Card> deckOne, List<Card> deckTwo)
         {
             int rounds = 0;
-            bool saveRound = true;
             int index = 0;
             int index2 = 0;
-            (int, int) damageValues;
+            (float, float) damageValues;
             Card card, card2;
             Random random = new Random();
             Logger log = new Logger();
@@ -48,39 +47,28 @@ namespace SWE1HttpServer.app.Models
 
                 if (damageValues.Item1 < damageValues.Item2)
                 {
-                    if (random.Next(0,5)<100&&saveRound==true)
-                    {
 
-                        saveRound = false;
 
-                    }
-                    else
-                    {
-                        deckTwo.Add(card);
-                        deckTwo.Add(card2);
-                        deckOne.RemoveAt(index);
-                        deckTwo.RemoveAt(index2);
-                        log.GameLog(card, card2, damageValues.Item1, damageValues.Item2);
-                    }
+                    deckTwo.Add(card);
+                    deckTwo.Add(card2);
+                    deckOne.RemoveAt(index);
+                    deckTwo.RemoveAt(index2);
+                    log.GameLog(card, card2, damageValues.Item1, damageValues.Item2);
+
 
 
 
                 }
                 else if (damageValues.Item1 > damageValues.Item2)
                 {
-                     if (random.Next(0,101)<5&&saveRound==true)
-                    {
-                        log.GameLog2();
-                        saveRound = false;
 
-                    }else{
                     deckOne.Add(card);
                     deckOne.Add(card2);
                     deckOne.RemoveAt(index);
                     deckTwo.RemoveAt(index2);
                     log.GameLog(card, card2, damageValues.Item1, damageValues.Item2);
 
-                    }
+
 
                 }
                 else
@@ -92,20 +80,25 @@ namespace SWE1HttpServer.app.Models
             }
             if (deckOne.Any() && !deckTwo.Any())
             {
-               Tuple<bool,string> comp = new Tuple<bool,string>(true,"A");
+                Tuple<bool, string> comp = new Tuple<bool, string>(true, "A");
+
+                //Give the log back to client here!!
                 Console.WriteLine(log.getGameLog("A"));
 
 
             }
             else if (!deckOne.Any() && deckTwo.Any())
             {
-                             Tuple<bool,string> comp = new Tuple<bool,string>(true,"A");
+                Tuple<bool, string> comp = new Tuple<bool, string>(true, "B");
+
+                //Give the log back to client here!!
                 Console.WriteLine(log.getGameLog("B"));
 
             }
             else
             {
-                                             Tuple<bool,string> comp = new Tuple<bool,string>(true,"A");
+                Tuple<bool, string> comp = new Tuple<bool, string>(true, "D");
+                //Give the log back to client here!!
 
                 Console.WriteLine(log.getGameLog("D"));
 
@@ -115,7 +108,7 @@ namespace SWE1HttpServer.app.Models
 
         }
 
-        public (int, int) checkMonsterRules(Monster card1, Monster card2)
+        public (float, float) checkMonsterRules(Monster card1, Monster card2)
         {
             if ((card1.monsterType == MonsterType.Goblin && card2.monsterType == MonsterType.Dragon))
             {
@@ -154,7 +147,7 @@ namespace SWE1HttpServer.app.Models
 
         }
 
-        public (int, int) checkMixedRules(Card card1, Card card2)
+        public (float, float) checkMixedRules(Card card1, Card card2)
         {
             //Special Fighting Rules
             if ((card1.type == CardType.Monster) && (((Monster)card1).monsterType == MonsterType.Knight) && (card2.element == ElementType.Water))

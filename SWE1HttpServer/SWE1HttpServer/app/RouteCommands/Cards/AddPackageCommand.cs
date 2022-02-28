@@ -13,8 +13,8 @@ namespace SWE1HttpServer.RouteCommands.Cards
     class AddPackagesCommand : ProtectedRouteCommand
     {
         private readonly IRequestManager messageManager;
-        string package;
-        public AddPackagesCommand(IRequestManager messageManager, string package)
+        List<TestCard>  package;
+        public AddPackagesCommand(IRequestManager messageManager, List<TestCard> package)
         {
             this.messageManager = messageManager;
             this.package = package;
@@ -23,8 +23,8 @@ namespace SWE1HttpServer.RouteCommands.Cards
         public override Response Execute()
         {
             var response = new Response();
-            List<TestCard> tempPackage = JsonConvert.DeserializeObject<List<TestCard>>(package);
-            List<Card> realPackage = messageManager.MakePackage(tempPackage);
+            //List<TestCard> tempPackage = JsonConvert.DeserializeObject<List<TestCard>>(package);
+            List<Card> realPackage = messageManager.MakePackage(package);
             if (realPackage.Count() > 0) { 
                             messageManager.AddPackage(realPackage);
                             response.StatusCode = StatusCode.Ok;

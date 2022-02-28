@@ -18,7 +18,7 @@ namespace SWE1HttpServer.app.Models
         {
             this.gameLog = new List<string>();
         }
-        public void GameLog(Card cardOne, Card cardTwo, int calculatedDamageOne, int calculatedDamageTwo)
+        public void GameLog(Card cardOne, Card cardTwo, float calculatedDamageOne, float calculatedDamageTwo)
         {
             string newLog = "Player";
             if (calculatedDamageOne > calculatedDamageTwo)//cardOne wins

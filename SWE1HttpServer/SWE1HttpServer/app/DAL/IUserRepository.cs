@@ -16,6 +16,8 @@ namespace SWE1HttpServer.app.DAL
         bool InsertUser(User user);
         void UpdateDeck(User user,List<Card> package);
         void UpdateActiveDeck(User user,List<Card> cards);
+        string[] GetRandomIds(User user);
+        void UpdateActiveDeckRandom(User user,List<Card> cards);
         List<Card> ShowWholeDeck(User user);
         List<Card> ShowActiveDeck(User user);
         string GetUserInfo(User user);

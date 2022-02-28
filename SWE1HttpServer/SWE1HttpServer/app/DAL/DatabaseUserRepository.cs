@@ -32,10 +32,16 @@ namespace SWE1HttpServer.app.DAL
                                                         "  FROM cards WHERE ismaindeck = @username";
         private const string UpdateUserCoinsCommand = "UPDATE users SET coins = coins-5 WHERE username = @username;";
         private const string SetMainDeckCommmand = "Update cards SET isMainDeck = @username WHERE id = @id;";
-        //  private const string SetMainDeckCommmand = "INSERT INTO cards(isMainDeck) VALUES (@username) WHERE id = @id";
         private const string InsertUserDataCommand = "UPDATE users SET name = @name, bio = @bio, picture=@pic WHERE username = @username;";
-        private const string GetUserStatCommand ="SELECT score FROM users WHERE username=@username";
+        private const string GetUserStatCommand = "SELECT score FROM users WHERE username=@username";
         private const string GetUserDataCommand = "SELECT name,bio,picture FROM users WHERE username = @username";
+        private const string GetRandomIdsCommand = "SELECT id FROM cards" +
+                                                      "  JOIN owns ON id = owns.id" +
+                                                      " WHERE username = @username" +
+                                                      ";";
+
+        private const string UpdateEloWinnerCommand = "UPDATE users SET score = score+3 WHERE username = @username;";
+        private const string UpdateEloLooserCommand = "UPDATE users SET score = score-5 WHERE username = @username;";
 
         private readonly NpgsqlConnection _connection;
 
@@ -102,9 +108,9 @@ namespace SWE1HttpServer.app.DAL
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                
-                
-                    response += "Name: "+reader["name"]+" Bio: "+reader["bio"]+" Picture: "+reader["picture"];
+
+
+                response += "Name: " + reader["name"] + " Bio: " + reader["bio"] + " Picture: " + reader["picture"];
             }
             return response;
         }
@@ -195,7 +201,7 @@ namespace SWE1HttpServer.app.DAL
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                
+
                 if (reader["score"] != DBNull.Value)
                     response = Convert.ToString(reader["score"]);
             }
@@ -298,7 +304,56 @@ namespace SWE1HttpServer.app.DAL
 
         public void updateElo(User playerOne, User playerTwo, string winner)
         {
-            throw new NotImplementedException();
+            using var cmd = new NpgsqlCommand(UpdateEloWinnerCommand, _connection);
+            using var cmd2 = new NpgsqlCommand(UpdateEloLooserCommand, _connection);
+            if (winner == "A")
+            {
+                cmd.Parameters.AddWithValue("username", playerOne.Username);
+                cmd2.Parameters.AddWithValue("username", playerTwo.Username);
+                cmd.ExecuteNonQuery();
+                cmd2.ExecuteNonQuery();
+            }
+            else if (winner == "B")
+            {
+                cmd.Parameters.AddWithValue("username", playerTwo.Username);
+                cmd2.Parameters.AddWithValue("username", playerOne.Username);
+                cmd.ExecuteNonQuery();
+                cmd2.ExecuteNonQuery();
+
+            }
+           
+        }
+
+        public string[] GetRandomIds(User user)
+        {
+            List<string> randomIds = new List<string>();
+            using var cmd = new NpgsqlCommand(GetRandomIdsCommand, _connection);
+            cmd.Parameters.AddWithValue("username", user.Username);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                if (reader["id"] != DBNull.Value)
+                {
+                    randomIds.Add(Convert.ToString(reader["id"]));
+                }
+
+            }
+            return randomIds.ToArray();
+        }
+
+        public void UpdateActiveDeckRandom(User user, List<Card> cards)
+        {
+            //check later if you own the card!!
+            for (int i = 0; i < cards.Count; i++)
+            {
+                var cmd = new NpgsqlCommand(SetMainDeckCommmand, _connection);
+                cmd.Parameters.AddWithValue("id", cards[i].Id);
+                cmd.Parameters.AddWithValue("username", user.Username);
+                cmd.ExecuteNonQuery();
+
+
+
+            }
         }
     }
 }

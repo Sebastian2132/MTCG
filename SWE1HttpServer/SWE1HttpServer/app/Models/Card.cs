@@ -32,7 +32,7 @@ namespace SWE1HttpServer.app.Models
    
     public abstract class Card
     {
-        public int Damage ;
+        public float Damage ;
         public ElementType element;
         public CardType type;
         public string Name;

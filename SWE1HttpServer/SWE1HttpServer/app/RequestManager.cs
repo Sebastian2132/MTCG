@@ -55,14 +55,17 @@ namespace SWE1HttpServer
 
         public IEnumerable<Card> AquirePackages(User user)
         {
-            //User coins gehen noch nicht
             List<Card> package = new List<Card>();
 
             if (user.Coins >= 5)
             {
                 package = packageRepository.GetPackage();
-                userRepository.UpdateDeck(user, package);
-                userRepository.UpdateUserCoins(user.Username);
+                if (package.Count()!=0)
+                {
+                    userRepository.UpdateDeck(user, package);
+                    userRepository.UpdateUserCoins(user.Username);
+                }
+
             }
             return package;
         }
@@ -83,6 +86,8 @@ namespace SWE1HttpServer
             Card card;
             //check somewhere where we check for authToken=username
             //apparentally not implemented
+
+
             List<Card> allCards = userRepository.allCards(user);
             string[] fullInfo = JsonConvert.DeserializeObject<string[]>(cards);
             if (fullInfo.Length <= 3)
@@ -172,7 +177,7 @@ namespace SWE1HttpServer
             }
         }
 
- public List<Card> ShowActiveDeck(User user)
+        public List<Card> ShowActiveDeck(User user)
         {
             return userRepository.ShowActiveDeck(user);
         }
@@ -206,7 +211,7 @@ namespace SWE1HttpServer
 
 
         }
-        
+
         public bool GetScoreboard(User user, string userName, Dictionary<string, string> info)
         {
             if (user.Username != userName)
@@ -225,10 +230,9 @@ namespace SWE1HttpServer
         public void StartBattle(User user)
         {
             var deck = userRepository.ShowActiveDeck(user);
-            if (battleQueue.TryDequeue(out var playerOne) && (playerOne.Item1.Username == user.Username)) 
+            if (battleQueue.TryDequeue(out var playerOne) && (playerOne.Item1.Username == user.Username))
             {
                 battleQueue.Enqueue(playerOne);
-                throw new InvalidOperationException();
 
             }
             else if (playerOne != null)
@@ -238,27 +242,53 @@ namespace SWE1HttpServer
             else
             {
 
-                battleQueue.Enqueue(new Tuple< User, List<Card>>(user,deck));
+                battleQueue.Enqueue(new Tuple<User, List<Card>>(user, deck));
             }
-             if(gameLogic.comp.Item2==""&&gameLogic.comp.Item1==true){
-                    userRepository.updateElo(playerOne.Item1,user,gameLogic.comp.Item2);
-             }else{
-
-             }
+            if (gameLogic.comp.Item2 != "" && gameLogic.comp.Item1 == true)
+            {
+                userRepository.updateElo(playerOne.Item1, user, gameLogic.comp.Item2);
+            }
         }
 
-        public bool checkBattle(){
-             
-          
+        public bool checkBattle()
+        {
+
+
             return gameLogic.comp.Item1;
         }
 
         public string GetStat(User user)
         {
-         
-                return userRepository.GetStat(user);
 
-            
+            return userRepository.GetStat(user);
+
+
+        }
+
+        public bool setRandomDeck(User user)
+        {
+            List<Card> newActiveDeck = new List<Card>();
+            Card card;
+            List<Card> allCards = userRepository.allCards(user);
+            string[] fullInfo = userRepository.GetRandomIds(user);
+            if (fullInfo.Length <= 3)
+            {
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < fullInfo.Length; i++)
+                {
+                    card = allCards.Find(x => x.Id == fullInfo[i]);
+                    if (card == null)
+                    {
+                        return false;
+                    }
+                    newActiveDeck.Add(card);
+                }
+                userRepository.UpdateActiveDeckRandom(user, newActiveDeck);
+                return true;
+            }
         }
     }
 }

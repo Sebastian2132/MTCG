@@ -14,7 +14,7 @@ namespace SWE1HttpServer.app.Models
     public class Monster : Card
     {
         public MonsterType monsterType{ get; set;}
-        public Monster(ElementType element, MonsterType MonsterType, int damage,string Id)
+        public Monster(ElementType element, MonsterType MonsterType, float damage,string Id)
         {
             this.element = element;
             this.monsterType = MonsterType;

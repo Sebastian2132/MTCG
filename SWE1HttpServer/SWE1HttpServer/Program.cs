@@ -9,6 +9,7 @@ using SWE1HttpServer.app.Models;
 using SWE1HttpServer.RouteCommands.Users;
 using SWE1HttpServer.RouteCommands.Cards;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace SWE1HttpServer.SWE1HttpServer
 {
@@ -19,10 +20,10 @@ namespace SWE1HttpServer.SWE1HttpServer
             var gamelogic = new GameLogic();
             var db = new Database("Host=localhost;Port=5431;Username=postgres;Password=postgres;Database=mtcgdb");
             var messageManager = new RequestManager(db.UserRepository,db.PackageRepository,gamelogic);
-
+            string requestParams = string.Empty;
             var identityProvider = new MessageIdentityProvider(db.UserRepository);
             var routeParser = new IdRouteParser();
-
+      
             var router = new Router(routeParser, identityProvider);
             RegisterRoutes(router, messageManager);
 
@@ -35,19 +36,19 @@ namespace SWE1HttpServer.SWE1HttpServer
             // public routes
             router.AddRoute(HttpMethod.Post, "/sessions", (r, p) => new LoginCommand(messageManager, Deserialize<Credentials>(r.Payload)));
             router.AddRoute(HttpMethod.Post, "/users", (r, p) => new RegisterCommand(messageManager, Deserialize<Credentials>(r.Payload)));
-
+            
             // protected routes
-       
             router.AddProtectedRoute(HttpMethod.Post,"/transactions/packages", (r, p)=>new BuyPackageCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Get,"/cards", (r, p)=>new ShowWholeDeck(messageManager));
-            router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,r.Payload));
+            router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,Deserialize<List<TestCard>>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get,"/deck", (r, p)=>new ShowDeckCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Put,"/deck", (r, p)=>new UpdateDeckCommand(messageManager,r.Payload));
             router.AddProtectedRoute(HttpMethod.Get,"/users/{id}", (r, p)=>new GetUSerDataCommand(messageManager,p["id"]));
             router.AddProtectedRoute(HttpMethod.Put,"/users/{id}", (r, p)=>new SetUserDataCommand(messageManager,p["id"],Deserialize<Dictionary<string,string>>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Post,"/battles",(r, p)=>new StartBattleCommand(messageManager));
-            //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new GetStatCommand(messageManager);
+            router.AddProtectedRoute(HttpMethod.Get,"/stats", (r, p)=>new GetStatAndScoreBoardCommand(messageManager));
             //router.AddProtectedRoute(HttpMethod.Get,"/score", (r, p)=>new GetScoreBoardCommand(messageManager);
+            router.AddProtectedRoute(HttpMethod.Put,"/deckrandom", (r, p)=>new SetRandomDeckCommand(messageManager));
 
         }
 

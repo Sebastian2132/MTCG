@@ -11,10 +11,10 @@ namespace SWE1HttpServer
         IEnumerable<Card> AquirePackages(User user);
         IEnumerable<Card> ShowWholeDeck(User user);
         List<Card> ShowActiveDeck(User user);
-       
                
         void AddPackage(List<Card> package);
         bool setDeck(string cards,User user);
+        bool setRandomDeck(User user);
         List<Card> MakePackage(List<TestCard> package);
         string GetUserInfo(User user,string userName);
 

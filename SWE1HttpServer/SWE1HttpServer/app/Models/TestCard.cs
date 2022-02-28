@@ -11,7 +11,7 @@ namespace SWE1HttpServer.app.Models
     {
        public string Id{ get; set;}
        public string Name{ get; set;}
-       public int Damage{ get; set;}
+       public float Damage{ get; set;}
 
 
     }
