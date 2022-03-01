@@ -12,7 +12,7 @@ namespace SWE1HttpServer.app.Models
 
     public class Logger
     {
-        private List<string> gameLog;
+        public List<string> gameLog;
 
         public Logger()
         {
@@ -62,7 +62,7 @@ namespace SWE1HttpServer.app.Models
 
             }
 
-            this.gameLog.Add(newLog);
+            gameLog.Add(newLog);
 
         }
         

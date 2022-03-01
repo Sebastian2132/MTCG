@@ -18,14 +18,14 @@ namespace SWE1HttpServer.SWE1HttpServer
                 return false;
             }
 
-            var pattern = "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/") + "$";
+            var pattern = "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/").Replace("?", "\\?") + "$";
             return Regex.IsMatch(request.ResourcePath, pattern);
         }
 
         public Dictionary<string, string> ParseParameters(RequestContext request, string routePattern)
         {
             var parameters = new Dictionary<string, string>();
-            var pattern = "^" + routePattern.Replace("{id}", "(?<id>.*)").Replace("/", "\\/") + "$";
+            var pattern = "^" + routePattern.Replace("{id}", "(?<id>.*)").Replace("/", "\\/").Replace("?", "\\?") + "$";
 
             var result = Regex.Match(request.ResourcePath, pattern);
             if (result.Groups["id"].Success)

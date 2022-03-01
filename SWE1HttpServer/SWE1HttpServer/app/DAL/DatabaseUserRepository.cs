@@ -116,16 +116,17 @@ namespace SWE1HttpServer.app.DAL
 
         public void UpdateDeck(User user, List<Card> package)
         {
-             var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
-            cmd2.Parameters.AddWithValue("username", user.Username);
-                cmd2.ExecuteNonQuery();
+
             for (int i = 0; i < package.Count; i++)
             {
                 var cmd = new NpgsqlCommand(InsertNewOwnerCommand, _connection);
                 cmd.Parameters.AddWithValue("id", package[i].Id);
                 cmd.Parameters.AddWithValue("user", user.Username);
                 cmd.ExecuteNonQuery();
-                
+                var cmd2 = new NpgsqlCommand(RemoveFromPackageCommand, _connection);
+                cmd2.Parameters.AddWithValue("id", package[i].Id);
+                cmd2.ExecuteNonQuery();
+
 
 
             }
@@ -231,15 +232,17 @@ namespace SWE1HttpServer.app.DAL
 
         public void UpdateActiveDeck(User user, List<Card> cards)
         {
+            var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
+            cmd2.Parameters.AddWithValue("username", user.Username);
+            cmd2.ExecuteNonQuery();
             //check later if you own the card!!
             for (int i = 0; i < cards.Count; i++)
             {
-                  var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
+
                 var cmd = new NpgsqlCommand(SetMainDeckCommmand, _connection);
                 cmd.Parameters.AddWithValue("id", cards[i].Id);
                 cmd.Parameters.AddWithValue("username", user.Username);
-                cmd2.Parameters.AddWithValue("username", user.Username);
-                cmd2.ExecuteNonQuery();
+
                 cmd.ExecuteNonQuery();
 
 
@@ -348,7 +351,7 @@ namespace SWE1HttpServer.app.DAL
         {
             var cmd2 = new NpgsqlCommand(DeconfigureDeckCommand, _connection);
             cmd2.Parameters.AddWithValue("username", user.Username);
-                cmd2.ExecuteNonQuery();
+            cmd2.ExecuteNonQuery();
             //check later if you own the card!!
             for (int i = 0; i < cards.Count; i++)
             {

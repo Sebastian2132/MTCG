@@ -25,6 +25,8 @@ namespace SWE1HttpServer.RouteCommands.Cards
             Response response = new();
             _requestManager.StartBattle(User);
             System.Threading.SpinWait.SpinUntil(() => _requestManager.checkBattle());
+            response.StatusCode = StatusCode.Ok;
+            response.Payload = _requestManager.getLog();
             Console.WriteLine("Program battle...");
 
             return response;

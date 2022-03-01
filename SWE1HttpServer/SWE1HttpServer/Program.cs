@@ -41,7 +41,8 @@ namespace SWE1HttpServer.SWE1HttpServer
             router.AddProtectedRoute(HttpMethod.Post,"/transactions/packages", (r, p)=>new BuyPackageCommand(messageManager));
             router.AddProtectedRoute(HttpMethod.Get,"/cards", (r, p)=>new ShowWholeDeck(messageManager));
             router.AddProtectedRoute(HttpMethod.Post,"/packages", (r, p)=>new AddPackagesCommand(messageManager,Deserialize<List<TestCard>>(r.Payload)));
-            router.AddProtectedRoute(HttpMethod.Get,"/deck", (r, p)=>new ShowDeckCommand(messageManager));
+            router.AddProtectedRoute(HttpMethod.Get,"/deck", (r, p)=>new ShowDeckCommand(messageManager,false));
+            router.AddProtectedRoute(HttpMethod.Get, "/deck?format=plain", (r, p) => new ShowDeckCommand(messageManager,true));
             router.AddProtectedRoute(HttpMethod.Put,"/deck", (r, p)=>new UpdateDeckCommand(messageManager,r.Payload));
             router.AddProtectedRoute(HttpMethod.Get,"/users/{id}", (r, p)=>new GetUSerDataCommand(messageManager,p["id"]));
             router.AddProtectedRoute(HttpMethod.Put,"/users/{id}", (r, p)=>new SetUserDataCommand(messageManager,p["id"],Deserialize<Dictionary<string,string>>(r.Payload)));

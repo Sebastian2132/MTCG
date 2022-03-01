@@ -11,7 +11,8 @@ namespace SWE1HttpServer.app.Models
 
     public class GameLogic
     {
-        public Tuple<bool, string> comp;
+        public bool finished = false;
+        public string winner = "";
         private readonly List<(ElementType, ElementType)> _elementRules = new List<(ElementType, ElementType)>{
              (ElementType.Fire,ElementType.Normal),
              (ElementType.Water,ElementType.Fire),
@@ -79,7 +80,8 @@ namespace SWE1HttpServer.app.Models
             }
             if (deckOne.Any() && !deckTwo.Any())
             {
-                Tuple<bool, string> comp = new Tuple<bool, string>(true, "A");
+                finished = true;
+                winner = "A";
 
                 //Give the log back to client here!!
                 Console.WriteLine(log.getGameLog("A"));
@@ -88,21 +90,23 @@ namespace SWE1HttpServer.app.Models
             }
             else if (!deckOne.Any() && deckTwo.Any())
             {
-                Tuple<bool, string> comp = new Tuple<bool, string>(true, "B");
+                finished = true;
+                winner = "B";
 
                 //Give the log back to client here!!
                 Console.WriteLine(log.getGameLog("B"));
 
             }
-            else if(rounds>100)
+            else 
             {
-                Tuple<bool, string> comp = new Tuple<bool, string>(true, "D");
+                finished = true;
+                winner = "D";
                 //Give the log back to client here!!
 
                 Console.WriteLine(log.getGameLog("D"));
 
             }
-            log.clearLog();
+            //log.clearLog();
 
 
         }

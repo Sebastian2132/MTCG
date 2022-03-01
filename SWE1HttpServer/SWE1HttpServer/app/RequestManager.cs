@@ -230,7 +230,7 @@ namespace SWE1HttpServer
         public void StartBattle(User user)
         {
             var deck = userRepository.ShowActiveDeck(user);
-            if (battleQueue.TryDequeue(out var playerOne) && (playerOne.Item1.Username == user.Username))
+            if (battleQueue.TryDequeue( out var playerOne) && (playerOne.Item1.Username == user.Username))
             {
                 battleQueue.Enqueue(playerOne);
 
@@ -244,19 +244,17 @@ namespace SWE1HttpServer
 
                 battleQueue.Enqueue(new Tuple<User, List<Card>>(user, deck));
             }
-            if (gameLogic.comp.Item2 != "" && gameLogic.comp.Item1 == true)
-            {
-                userRepository.updateElo(playerOne.Item1, user, gameLogic.comp.Item2);
+            if(gameLogic.finished==true&&gameLogic.winner!=""){
+                userRepository.updateElo(playerOne.Item1, user, gameLogic.winner);
             }
+           
         }
 
         public bool checkBattle()
         {
-            if(gameLogic.comp.Item1==true){
-                
-            }
+           
 
-            return gameLogic.comp.Item1;
+            return gameLogic.finished;
         }
 
         public string GetStat(User user)
@@ -296,6 +294,12 @@ namespace SWE1HttpServer
         public string GetScoreboard()
         {
             return userRepository.GetScoreboard();
+        }
+
+        public string getLog()
+        {
+            Logger log = new Logger();
+            return log.getGameLog(gameLogic.winner);
         }
     }
 }
