@@ -25,7 +25,7 @@ namespace SWE1HttpServer.SWE1HttpServer
         public Dictionary<string, string> ParseParameters(RequestContext request, string routePattern)
         {
             var parameters = new Dictionary<string, string>();
-            var pattern = "^" + routePattern.Replace("{id}", "(?<id>.*)").Replace("/", "\\/").Replace("?", "\\?") + "$";
+            var pattern = "^" + routePattern.Replace("{id}", "(?<id>.*)").Replace("/", "\\/") + "$";
 
             var result = Regex.Match(request.ResourcePath, pattern);
             if (result.Groups["id"].Success)

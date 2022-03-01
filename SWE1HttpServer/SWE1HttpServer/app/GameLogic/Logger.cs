@@ -13,6 +13,8 @@ namespace SWE1HttpServer.app.Models
     public class Logger
     {
         public List<string> gameLog;
+        public List<string> newLog;
+        public string playerLog;
 
         public Logger()
         {
@@ -65,7 +67,7 @@ namespace SWE1HttpServer.app.Models
             gameLog.Add(newLog);
 
         }
-        
+
         public void clearLog()
         {
             this.gameLog.Clear();
@@ -73,24 +75,29 @@ namespace SWE1HttpServer.app.Models
 
         public string getGameLog(string winner)
         {
-            string playerLog = "Your Gamelog:\n";
-            foreach (var logitem in gameLog)
+            if (playerLog == null)
             {
-                playerLog += logitem + "\n";
-            }
-            playerLog += new string('-', 60) + "\n";
-            if (winner != "D")
-            {
-                playerLog += "Player" + winner + " won!" + "\n";
+                playerLog = "Your Gamelog:\n";
+                foreach (var logitem in gameLog)
+                {
+                    playerLog += logitem + "\n";
+                }
+                playerLog += new string('-', 60) + "\n";
+                if (winner != "D")
+                {
+                    playerLog += "Player" + winner + " won!" + "\n";
 
-            }
-            else
-            {
-                playerLog += "It was a Draw!\n";
+                }
+                else
+                {
+                    playerLog += "It was a Draw!\n";
 
+                }
+
+
+                
             }
             return playerLog;
         }
-    }
 
-}
+    }}
