@@ -68,36 +68,22 @@ namespace SWE1HttpServer.app.Models
 
         }
 
-        public void clearLog()
-        {
-            this.gameLog.Clear();
-        }
+    
 
-        public string getGameLog(string winner)
+        public string getGameLog()
         {
             if (playerLog == null)
             {
-                playerLog = "Your Gamelog:\n";
+                playerLog = "\nGamelog:\n";
                 foreach (var logitem in gameLog)
                 {
                     playerLog += logitem + "\n";
                 }
                 playerLog += new string('-', 60) + "\n";
-                if (winner != "D")
-                {
-                    playerLog += "Player" + winner + " won!" + "\n";
-
-                }
-                else
-                {
-                    playerLog += "It was a Draw!\n";
-
-                }
-
-
-                
+             
             }
             return playerLog;
+             
         }
 
     }}

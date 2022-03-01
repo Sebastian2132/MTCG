@@ -298,8 +298,8 @@ namespace SWE1HttpServer
 
         public string getLog()
         {
-            Logger log = new Logger();
-            return log.getGameLog(gameLogic.winner);
+            
+            return gameLogic.playerLog;
         }
     }
 }

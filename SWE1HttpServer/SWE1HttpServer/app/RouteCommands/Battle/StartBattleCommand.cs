@@ -23,10 +23,20 @@ namespace SWE1HttpServer.RouteCommands.Cards
         public override Response Execute()
         {
             Response response = new();
+            int elo =Convert.ToInt32(_requestManager.GetStat(User));
+            
             _requestManager.StartBattle(User);
             System.Threading.SpinWait.SpinUntil(() => _requestManager.checkBattle());
             response.StatusCode = StatusCode.Ok;
-            response.Payload = _requestManager.getLog();
+            int elo2 =Convert.ToInt32(_requestManager.GetStat(User));
+            if(elo>elo2){
+                response.Payload ="You Lost!";
+            }else if(elo2>elo){
+                response.Payload ="You Won!";
+            }else{
+                response.Payload ="It was a Draw!";
+            }
+            response.Payload += _requestManager.getLog();
             Console.WriteLine("Program battle...");
 
             return response;

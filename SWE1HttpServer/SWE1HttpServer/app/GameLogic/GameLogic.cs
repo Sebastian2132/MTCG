@@ -13,6 +13,7 @@ namespace SWE1HttpServer.app.Models
     {
         public bool finished = false;
         public string winner = "";
+        public string playerLog;
         private readonly List<(ElementType, ElementType)> _elementRules = new List<(ElementType, ElementType)>{
              (ElementType.Fire,ElementType.Normal),
              (ElementType.Water,ElementType.Fire),
@@ -84,7 +85,6 @@ namespace SWE1HttpServer.app.Models
                 winner = "A";
 
                 //Give the log back to client here!!
-                Console.WriteLine(log.getGameLog("A"));
 
 
             }
@@ -94,7 +94,6 @@ namespace SWE1HttpServer.app.Models
                 winner = "B";
 
                 //Give the log back to client here!!
-                Console.WriteLine(log.getGameLog("B"));
 
             }
             else 
@@ -103,9 +102,9 @@ namespace SWE1HttpServer.app.Models
                 winner = "D";
                 //Give the log back to client here!!
 
-                Console.WriteLine(log.getGameLog("D"));
 
             }
+            playerLog=log.getGameLog();
             //log.clearLog();
 
 
